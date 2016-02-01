@@ -1,0 +1,9 @@
+php_value error_reporting 6135
+php_flag log_errors On
+php_value error_log "/var/log/php/error_log"
+php_flag display_errors On
+
+RewriteEngine on
+RewriteCond $1 !^(index\.php|index_cron\.php|favicon\.ico|fonts|sitemap\.xml|y_key_.+\.html$|ga\.php|common|css|js|img|.+\.gif$|.+\.jpg$|.+\.png$|.+\.js$)
+RewriteRule ^(.*)$ index.php/$1 [L]
+
