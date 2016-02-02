@@ -6,7 +6,7 @@ define('SITE_NAME', 'Codeigniter CMS (development)');
 // メールアドレス
 define('MAIL_ADDRESS_FROM', 'phamhoaian005@gmail.com');
 
-define('LANG','Japanese');
+define('LANG','English');
 
 
 

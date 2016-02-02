@@ -67,7 +67,7 @@ class MY_Controller extends CI_Controller {
 		mb_substitute_character("long");
 		mb_substitute_character(0x3013);
 		// PHP 5.3 用
-		ini_set('date.timezone', 'Asia/Tokyo');
+		ini_set('date.timezone', 'Asia/Ho_Chi_Minh');
 		
 		$this->load->helper(array('url','path','form','main'));
 		
