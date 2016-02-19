@@ -14,10 +14,9 @@ table{
 }
 fieldset,img{
 	border:0;
-	vertical-align:top;
 
 }
-address,caption,cite,code,dfn,em,strong,th,var{
+address,caption,cite,code,dfn,em,th,var{
 	font-style:normal;
 	font-weight:normal;
 }
@@ -43,7 +42,6 @@ a:hover{
 
 body{
 	font-family:"メイリオ","ＭＳ Ｐゴシック", "Hiragino Kaku Gothic Pro", "Hiragino Kaku Gothic Pro W3", Osaka, Arial, Helvetica, sans-serif;
-  background:#ede8e0;
 }
 /* ページ共通
 ---------------------------------------------------- */
