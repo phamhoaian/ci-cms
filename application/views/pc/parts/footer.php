@@ -1,82 +1,199 @@
-<footer id="commonFooter">
-  <div id="footInner" class="container">
-    <div class="row">
-      <div class="col-md-6">
-        <dl>
-          <dt>北海道・東北</dt>
-          <dd><a href="<?php echo site_url("pref/hokkaido"); ?>">北海道</a></dd>
-          <dd><a href="<?php echo site_url("pref/aomori"); ?>">青森</a></dd>
-          <dd><a href="<?php echo site_url("pref/iwate"); ?>">岩手</a></dd>
-          <dd><a href="<?php echo site_url("pref/akita"); ?>">秋田</a></dd>
-          <dd><a href="<?php echo site_url("pref/miyagi"); ?>">宮城</a></dd>
-          <dd><a href="<?php echo site_url("pref/yamagata"); ?>">山形</a></dd>
-          <dd><a href="<?php echo site_url("pref/fukushima"); ?>">福島</a></dd>
-        </dl>
-        <dl>
-          <dt>関東</dt>
-          <dd><a href="<?php echo site_url("pref/tokyo"); ?>">東京</a></dd>
-          <dd><a href="<?php echo site_url("pref/kanagawa"); ?>">神奈川</a></dd>
-          <dd><a href="<?php echo site_url("pref/chiba"); ?>">千葉</a></dd>
-          <dd><a href="<?php echo site_url("pref/saitama"); ?>">埼玉</a></dd>
-          <dd><a href="<?php echo site_url("pref/ibaragi"); ?>">茨城</a></dd>
-          <dd><a href="<?php echo site_url("pref/tochigi"); ?>">栃木</a></dd>
-          <dd><a href="<?php echo site_url("pref/gunma"); ?>">群馬</a></dd>
-        </dl>
-        <dl>
-          <dt>関西</dt>
-          <dd><a href="<?php echo site_url("pref/osaka"); ?>">大阪</a></dd>
-          <dd><a href="<?php echo site_url("pref/hyogo"); ?>">兵庫</a></dd>
-          <dd><a href="<?php echo site_url("pref/kyoto"); ?>">京都</a></dd>
-          <dd><a href="<?php echo site_url("pref/shiga"); ?>">滋賀</a></dd>
-          <dd><a href="<?php echo site_url("pref/nara"); ?>">奈良</a></dd>
-          <dd><a href="<?php echo site_url("pref/wakayama"); ?>">和歌山</a></dd>
-        </dl>
-        <dl>
-          <dt>甲信越・北陸</dt>
-          <dd><a href="<?php echo site_url("pref/yamanashi"); ?>">山梨</a></dd>
-          <dd><a href="<?php echo site_url("pref/nagano"); ?>">長野</a></dd>
-          <dd><a href="<?php echo site_url("pref/niigata"); ?>">新潟</a></dd>
-          <dd><a href="<?php echo site_url("pref/toyama"); ?>">富山</a></dd>
-          <dd><a href="<?php echo site_url("pref/ishikawa"); ?>">石川</a></dd>
-          <dd><a href="<?php echo site_url("pref/fukui"); ?>">福井</a></dd>
-        </dl>
-      </div>
-      <div class="col-md-6">
-        <dl>
-          <dt>東海</dt>
-          <dd><a href="<?php echo site_url("pref/aichi"); ?>">愛知</a></dd>
-          <dd><a href="<?php echo site_url("pref/shizuoka"); ?>">静岡</a></dd>
-          <dd><a href="<?php echo site_url("pref/gifu"); ?>">岐阜</a></dd>
-          <dd><a href="<?php echo site_url("pref/mie"); ?>">三重</a></dd>
-        </dl>
-        <dl>
-          <dt>中国</dt>
-          <dd><a href="<?php echo site_url("pref/okayama"); ?>">岡山</a></dd>
-          <dd><a href="<?php echo site_url("pref/hiroshima"); ?>">広島</a></dd>
-          <dd><a href="<?php echo site_url("pref/tottori"); ?>">鳥取</a></dd>
-          <dd><a href="<?php echo site_url("pref/shimane"); ?>">島根</a></dd>
-          <dd><a href="<?php echo site_url("pref/yamaguchi"); ?>">山口</a></dd>
-        </dl>
-        <dl>
-          <dt>九州・沖縄</dt>
-          <dd><a href="<?php echo site_url("pref/fukuoka"); ?>">福岡</a></dd>
-          <dd><a href="<?php echo site_url("pref/saga"); ?>">佐賀</a></dd>
-          <dd><a href="<?php echo site_url("pref/nagasaki"); ?>">長崎</a></dd>
-          <dd><a href="<?php echo site_url("pref/kumamoto"); ?>">熊本</a></dd>
-          <dd><a href="<?php echo site_url("pref/ooita"); ?>">大分</a></dd>
-          <dd><a href="<?php echo site_url("pref/miyazaki"); ?>">宮崎</a></dd>
-          <dd><a href="<?php echo site_url("pref/kagoshima"); ?>">鹿児島</a></dd>
-          <dd><a href="<?php echo site_url("pref/okinawa"); ?>">沖縄</a></dd>
-        </dl>
-        <dl>
-          <dt>四国</dt>
-          <dd><a href="<?php echo site_url("pref/ehime"); ?>">愛媛</a></dd>
-          <dd><a href="<?php echo site_url("pref/kagawa"); ?>">香川</a></dd>
-          <dd><a href="<?php echo site_url("pref/kouchi"); ?>">高知</a></dd>
-          <dd><a href="<?php echo site_url("pref/tokushima"); ?>">徳島</a></dd>
-        </dl>
-      </div>
+<footer id="footer">
+    <div class="footer-top">
+    	<div class="container">
+    		<div class="row">
+    			<div class="col-md-4">
+    				<article class="payment-service">
+    					<a href="#"></a>
+    					<div class="row">
+    						<div class="col-md-4 text-center">
+    							<i class="fa fa-thumbs-up"></i>
+    						</div>
+    						<div class="col-md-8">
+	    						<h3>Safe Payments</h3>
+	    						<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+	    					</div>
+    					</div>
+    				</article>
+    			</div>
+    			<div class="col-md-4">
+    				<article class="payment-service">
+    					<a href="#"></a>
+    					<div class="row">
+    						<div class="col-md-4 text-center">
+    							<i class="fa fa-truck"></i>
+    						</div>
+    						<div class="col-md-8">
+	    						<h3>Free shipping</h3>
+	    						<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+	    					</div>
+    					</div>
+    				</article>
+    			</div>
+    			<div class="col-md-4">
+    				<article class="payment-service">
+    					<a href="#"></a>
+    					<div class="row">
+    						<div class="col-md-4 text-center">
+    							<i class="fa fa-fax"></i>
+    						</div>
+    						<div class="col-md-8">
+	    						<h3>24/7 Support</h3>
+	    						<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+	    					</div>
+    					</div>
+    				</article>
+    			</div>
+    		</div>
+    	</div>
     </div>
-  </div>
+    <!-- /footer-top -->
+    <div class="social">
+    	<div class="container">
+    		<div class="row">
+    			<div class="col-md-6">
+    				<div class="socials">
+    					<a href="#"><i class="fa fa-skype"></i></a>
+    					<a href="#"><i class="fa fa-linkedin"></i></a>
+    					<a href="#"><i class="fa fa-facebook"></i></a>
+    					<a href="#"><i class="fa fa-twitter"></i></a>
+    					<a href="#"><i class="fa fa-google-plus"></i></a>
+    					<a href="#"><i class="fa fa-youtube"></i></a>
+    				</div>
+    			</div>
+    			<div class="col-md-6">
+    				<form action="" class="form-horizontal">
+    					<input type="text" class="input form-control" placeholder="Newsletter">
+    					<button type="submit">
+    						Sign up
+    						<i class="fa fa-angle-right"></i>
+    					</button>
+    				</form>
+    			</div>
+    		</div>
+    	</div>
+    </div>
+    <!-- /social -->
+    <div class="footer-nav">
+    	<div class="container">
+    		<div class="row">
+    			<div class="col-md-3">
+    				<h3 class="nav-header">Information</h3>
+    				<ul class="list-unstyled">
+    					<li>
+                            <a href="#">About Us</a>
+                        </li>
+    					<li>
+                            <a href="#">Contact Us</a>
+                        </li>
+    					<li>
+                            <a href="#">Delivery Information</a>
+                        </li>
+    					<li>
+                            <a href="#">Privacy Policy</a>
+                        </li>
+    					<li>
+                            <a href="#">Terms & Conditions</a>
+                        </li>
+    					<li>
+                            <a href="#">Site Map</a>
+                        </li>
+    					<li>
+                            <a href="#">Returns</a>
+                        </li>
+    				</ul>
+    			</div>
+    			<div class="col-md-3">
+    				<h3 class="nav-header">My Account</h3>
+                    <ul class="list-unstyled">
+                        <li>
+                            <a href="#">My Account</a>
+                        </li>
+                        <li>
+                            <a href="#">Wish List</a>
+                        </li>
+                        <li>
+                            <a href="#">Order History</a>
+                        </li>
+                        <li>
+                            <a href="#">Brands</a>
+                        </li>
+                        <li>
+                            <a href="#">Specials</a>
+                        </li>
+                        <li>
+                            <a href="#">Newsletter</a>
+                        </li>
+                        <li>
+                            <a href="#">Secure payment</a>
+                        </li>
+                    </ul>
+    			</div>
+    			<div class="col-md-3">
+    				<h3 class="nav-header">I Want...</h3>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+                    <form action="" class="form-horizontal want">
+                        <textarea class="form-control" placeholder="I want..."></textarea>
+                        <button type="submit">
+                            Send us
+                            <i class="fa fa-angle-right"></i>
+                        </button>
+                    </form>
+    			</div>
+    			<div class="col-md-3">
+    				<h3 class="nav-header">Get In Touch</h3>
+                    <p>
+                        <strong>Phone: 1-000-000-0000</strong>
+                        <br/>
+                        <strong>Email:</strong>info@yourdomain.com
+                    </p>
+                    <p>
+                        <strong>Your Company LTD.</strong>
+                        <br/>
+                        Street Name, 000000, City Name
+                    </p>
+                    <p>
+                        <a href="#">
+                            LOCATION IN GOOGLE MAPS
+                        </a>
+                    </p>
+    			</div>
+    		</div>
+    	</div>
+    </div>
+    <!-- /footer-nav -->
+    <div class="footer-bottom">
+    	<div class="container">
+            <div class="row">
+                <div class="col-md-4"></div>
+                <div class="col-md-4">
+                    <p class="text-center">
+                        <span class="copy">Copyright &copy; <?php echo date('Y') ?></span> Effect | All rights reserved.<br>
+                        Designed by <a href="<?php echo site_url(); ?>">Pham An</a>
+                    </p>
+                </div>
+                <div class="col-md-4">
+                    <ul class="list-unstyled text-right">
+                        <li>
+                            <img src="<?php echo base_url(); ?>/common/img/payment-maestro.jpg" alt="Maestro">
+                        </li>
+                        <li>
+                            <img src="<?php echo base_url(); ?>/common/img/payment-discover.jpg" alt="Discover">
+                        </li>
+                        <li>
+                            <img src="<?php echo base_url(); ?>/common/img/payment-visa.jpg" alt="Visa">
+                        </li>
+                        <li>
+                            <img src="<?php echo base_url(); ?>/common/img/payment-american-express.jpg" alt="American Express">
+                        </li>
+                        <li>
+                            <img src="<?php echo base_url(); ?>/common/img/payment-paypal.jpg" alt="Paypal">
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /footer-bottom -->
 </footer>
-<div id="copyRight">&copy; <?php echo SITE_NAME;?> <?php echo date("Y"); ?></div>
+<!-- /Footer -->
