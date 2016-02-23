@@ -24,7 +24,17 @@
 					<span class="fa fa-chevron-down"></span>
 				</a>
 				<ul class="nav child-menu">
-					<li class="current"><a href="<?php echo site_url("cms"); ?>">Dashboard</a></li>
+					<li<?php if (isset($active_sub_menu) && $active_sub_menu == "dashboard") { ?> class="current"<?php } ?>><a href="<?php echo site_url("cms"); ?>">Dashboard</a></li>
+				</ul>
+			</li>
+			<li<?php if (isset($active_side_menu) && $active_side_menu == "blog") { ?> class="active"<?php } ?>>
+				<a href="javascript:void(0)">
+					<i class="fa fa-edit"></i>Blog
+					<span class="fa fa-chevron-down"></span>
+				</a>
+				<ul class="nav child-menu">
+					<li<?php if (isset($active_sub_menu) && $active_sub_menu == "blog_edit") { ?> class="current"<?php } ?>><a href="<?php echo site_url("cms/blog/edit"); ?>">Add New</a></li>
+					<li<?php if (isset($active_sub_menu) && $active_sub_menu == "blog_search") { ?> class="current"<?php } ?>><a href="<?php echo site_url("cms/blog/search"); ?>">Search</a></li>
 				</ul>
 			</li>
 		</ul>

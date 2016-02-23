@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Home extends MY_Controller {
+class Blog extends MY_Controller {
     
     public function __construct() {
         parent::__construct();
@@ -16,16 +16,19 @@ class Home extends MY_Controller {
 		$this->data['description'] = "Effect, HTML5 & CSS3 template";
         
         // breadcrumbs
-        $this->position['item'][0]['title'] = SITE_NAME;
+        $this->position['item'][0]['title'] = "Home";
 		$this->position['item'][0]['url'] = site_url();
 
         // active side menu
-        $this->data["active_side_menu"] = "home";
+        $this->data["active_side_menu"] = "blog";
+
+        // the number of item per page
+        $this->limit = 10;
     }
     
     public function index() {
         
         // load view
-        $this->load_view("home", $this->data);
+        $this->load_view("list", $this->data);
     }
 }

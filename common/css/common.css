@@ -328,6 +328,7 @@ body {
     -ms-transition: all 0.3s ease;
     transition: all 0.3s ease;
 }
+.navbar-main .nav > li.active > a,
 .navbar-main .nav > li > a:hover {
     background-color: #EB2C33;
     border-color: #FFF;
@@ -341,6 +342,7 @@ body {
     -ms-transition: all 0.3s ease;
     transition: all 0.3s ease;
 }
+.navbar-main .navbar-brand.active,
 .navbar-main .navbar-brand:hover {
     color: #EB2C33;
 }

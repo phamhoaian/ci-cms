@@ -27,6 +27,9 @@ class Cms extends MY_Controller {
         // breadcrumbs
         $this->position['item'][1]['title'] = "Dashboard";
         $this->data['position'] = $this->load->view("pc/parts/position", $this->position, TRUE);
+
+        // active side menu
+        $this->data["active_sub_menu"] = "dashboard";
         
         // load view
         $this->load_view("top", $this->data);

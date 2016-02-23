@@ -153,14 +153,14 @@
                                 <span class="icon-bar"></span>
                                 <span class="icon-bar"></span>
                             </button>
-                            <a href="<?php echo site_url(); ?>" class="navbar-brand">
+                            <a href="<?php echo site_url(); ?>" class="navbar-brand <?php if (isset($active_side_menu) && $active_side_menu == "home") { ?>active<?php } ?>">
                                 <i class="fa fa-home"></i>
                             </a>
                         </div>
                         <div id="navbar-collapse-1" class="navbar-collapse collapse">
                             <ul class="nav navbar-nav">
-                                <li>
-                                    <a href="">Blog</a>
+                                <li<?php if (isset($active_side_menu) && $active_side_menu == "blog") { ?> class="active"<?php } ?>>
+                                    <a href="<?php echo site_url("blog"); ?>">Blog</a>
                                 </li>
                             </ul>
                             <ul class="nav navbar-nav navbar-right">
