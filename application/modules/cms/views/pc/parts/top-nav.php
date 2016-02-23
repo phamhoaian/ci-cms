@@ -12,6 +12,56 @@
 					<i class="fa fa-envelope-o"></i>
 					<span class="badge bg-green">6</span>
 				</a>
+				<ul class="dropdown-menu list-unstyled msg-list animated fadeInDown">
+					<li>
+                        <a href="#">
+                            <span class="image">
+                        		<img src="<?php echo base_url(); ?>common/img/profile-img.jpg" alt="Profile Image">
+                    		</span>
+                            <span>
+                    		<span>John Smith</span>
+                            	<span class="time">3 mins ago</span>
+                            </span>
+                            <span class="message">
+                        		Film festivals used to be do-or-die moments for movie makers. They were where... 
+                    		</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <span class="image">
+                        		<img src="<?php echo base_url(); ?>common/img/profile-img.jpg" alt="Profile Image">
+                    		</span>
+                            <span>
+                    		<span>John Smith</span>
+                            	<span class="time">3 mins ago</span>
+                            </span>
+                            <span class="message">
+                        		Film festivals used to be do-or-die moments for movie makers. They were where... 
+                    		</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <span class="image">
+                        		<img src="<?php echo base_url(); ?>common/img/profile-img.jpg" alt="Profile Image">
+                    		</span>
+                            <span>
+                    		<span>John Smith</span>
+                            	<span class="time">3 mins ago</span>
+                            </span>
+                            <span class="message">
+                        		Film festivals used to be do-or-die moments for movie makers. They were where... 
+                    		</span>
+                        </a>
+                    </li>
+                    <li class="text-center">
+                    	<a>
+                            <strong>See All Alerts</strong>
+                            <i class="fa fa-angle-right"></i>
+                        </a>
+                    </li>
+				</ul>
 			</li>
 			<li>
 				<a href="javascript:void(0)" class="user-profile dropdown-toggle" data-toggle="dropdown">

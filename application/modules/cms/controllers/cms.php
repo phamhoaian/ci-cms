@@ -16,15 +16,16 @@ class Cms extends MY_Controller {
 		$this->data['description'] = "Administrator - Effect, HTML5 & CSS3 template";
         
         // breadcrumbs
-        $this->position['item'][0]['title'] = SITE_NAME;
-		$this->position['item'][0]['url'] = site_url();
+        $this->position['item'][0]['title'] = "Home";
+		$this->position['item'][0]['url'] = site_url("cms");
 
         // active side menu
         $this->data["active_side_menu"] = "cms";
     }
     
     public function index() {
-
+        // breadcrumbs
+        $this->position['item'][1]['title'] = "Dashboard";
         $this->data['position'] = $this->load->view("pc/parts/position", $this->position, TRUE);
         
         // load view

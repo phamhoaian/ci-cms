@@ -40,6 +40,11 @@
 			<?php $this->load->view('pc/parts/left-col'); ?>
 			<div class="right-col" role="main">
 				<?php $this->load->view('pc/parts/top-nav'); ?>
+				<?php if (isset($position) and $position){ ?>
+				<ul class="breadcrumb">
+				    <?php echo $position; ?>
+				</ul>
+				<?php } ?>
 				<div class="main-content">
 					<?php echo $main; ?>
 				</div>
