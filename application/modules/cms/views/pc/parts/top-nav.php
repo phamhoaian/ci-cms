@@ -56,7 +56,7 @@
                         </a>
                     </li>
                     <li class="text-center">
-                    	<a>
+                    	<a href="#">
                             <strong>See All Alerts</strong>
                             <i class="fa fa-angle-right"></i>
                         </a>
