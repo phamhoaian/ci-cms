@@ -29,16 +29,12 @@ class Blog extends MY_Controller {
 	}
 
 	public function index() {
-		redirect(site_url("cms/blog/search"));
-	}
-
-	public function search() {
 		// breadcrumbs
         $this->position['item'][2]['title'] = "Search";
         $this->data['position'] = $this->load->view("pc/parts/position", $this->position, TRUE);
 
         // active side menu
-        $this->data["active_sub_menu"] = "blog_search";
+        $this->data["active_sub_menu"] = "blog_items";
 
 		// load view
         $this->load_view("blog/search", $this->data);

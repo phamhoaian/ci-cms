@@ -40,6 +40,9 @@
 
 $route['default_controller'] = "home";
 $route['404_override'] = '';
+$route['cms/blog/categories'] = 'cms/blog_categories';
+$route['cms/blog/categories/edit'] = 'cms/blog_categories/edit';
+$route['cms/blog/categories/edit/(:any)'] = 'cms/blog_categories/edit/$1';
 
 
 /* End of file routes.php */

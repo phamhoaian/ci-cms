@@ -33,8 +33,8 @@
 					<span class="fa fa-chevron-down"></span>
 				</a>
 				<ul class="nav child-menu">
-					<li<?php if (isset($active_sub_menu) && $active_sub_menu == "blog_edit") { ?> class="current"<?php } ?>><a href="<?php echo site_url("cms/blog/edit"); ?>">Add New</a></li>
-					<li<?php if (isset($active_sub_menu) && $active_sub_menu == "blog_search") { ?> class="current"<?php } ?>><a href="<?php echo site_url("cms/blog/search"); ?>">Search</a></li>
+					<li<?php if (isset($active_sub_menu) && $active_sub_menu == "blog_items") { ?> class="current"<?php } ?>><a href="<?php echo site_url("cms/blog"); ?>">Items</a></li>
+					<li<?php if (isset($active_sub_menu) && $active_sub_menu == "blog_categories") { ?> class="current"<?php } ?>><a href="<?php echo site_url("cms/blog/categories"); ?>">Categories</a></li>
 				</ul>
 			</li>
 		</ul>
