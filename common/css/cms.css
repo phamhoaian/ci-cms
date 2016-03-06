@@ -329,7 +329,7 @@ body.nav-sm .left-col .sidebar-footer {
     color: #5A738E;
 }
 #top-nav .dropdown-menu li a {
-	width: 100%;
+    width: 100%;
     padding: 10px 15px;
     font-size: 12px;
 }
@@ -347,17 +347,21 @@ body.nav-sm .left-col .sidebar-footer {
     top: -6px;
 }
 .main .right-col .main-content {
-	padding: 20px;
-	width: 100%;
-	overflow: hidden;
+    padding: 20px;
+    width: 100%;
+    overflow: hidden;
 }
 /* JAMBO TABLE */
 table.jambo_table {
     border: 1px solid rgba(221, 221, 221, 0.78);
+    margin-bottom: 15px;
 }
 table.jambo_table thead {
     background: rgba(52, 73, 94, 0.94);
     color: #ECF0F1;
+}
+table.jambo_table tbody tr td {
+    vertical-align: middle;
 }
 table.jambo_table .published .fa,
 table.jambo_table .published .glyphicon{
@@ -372,6 +376,9 @@ table.jambo_table .published .fa-close {
 }
 table.jambo_table .image img{
     max-width: 30px;
+}
+table.jambo_table .fa-image {
+    font-size: 15px;
 }
 table.jambo_table tbody tr.selected {
     background: rgba(38, 185, 154, 0.16);
@@ -549,6 +556,31 @@ table.jambo_table tbody tr.selected td {
 }
 .x_panel .image_preview .image_del:hover .fa-close {
     display: block;
+}
+/* PAGINATION */
+.paging a,
+.paging span{
+    display: inline-block;
+    padding: 4px 9px;
+    background: #ddd;
+    border: 1px solid #ddd;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    margin: 0 1px;
+    text-decoration: none;
+     -moz-transition: all .2s ease;
+    -o-transition: all .2s ease;
+    -webkit-transition: all .2s ease;
+    -ms-transition: all .2s ease;
+    transition: all .2s ease;
+}
+.paging a:hover,
+.paging span:hover,
+.paging .current{
+    background-color: #1ABB9C !important;
+    border-color: rgba(38, 185, 154, 0.59) !important;
+    color: #fff;
 }
 @media (max-width: 991px) {
     .main .left-col {

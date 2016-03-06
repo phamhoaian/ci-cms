@@ -40,11 +40,6 @@
 
 $route['default_controller'] = "home";
 $route['404_override'] = '';
-$route['cms/blog/categories'] = 'cms/blog_categories';
-$route['cms/blog/categories/edit'] = 'cms/blog_categories/edit';
-$route['cms/blog/categories/edit/(:any)'] = 'cms/blog_categories/edit/$1';
-$route['cms/blog/categories/photo_del'] = 'cms/blog_categories/photo_del';
-$route['cms/blog/categories/photo_del/(:any)'] = 'cms/blog_categories/photo_del/$1';
 
 /* End of file routes.php */
 /* Location: ./application/config/routes.php */

@@ -30,15 +30,38 @@ class Blog_categories extends MY_Controller {
         // the number of item per page
         $this->limit = 10;
 	}
+    
+    public function index() {
+        $jump_url = site_url("cms/blog_categories/search");
+        header("Location: $jump_url");
+    }
 
-	public function index() {
+	public function search() {
         // load css and js 
         $this->set_css("green.css");
         $this->set_js("icheck.min.js");
         
+        // offset
+        $offset = (int) $this->uri->segment(4, 0);
+        
+        // limit
+        $this->data["limit"] = $this->input->post('limit');
+        if ($this->data["limit"] == "") {
+            $this->data["limit"] = 10;
+        }
+        
 		// breadcrumbs
         $this->position['item'][2]['title'] = "Categories";
         $this->data['position'] = $this->load->view("pc/parts/position", $this->position, TRUE);
+        
+        // list categories
+        $this->common_model->set_table("blog_categories");
+        $this->data["categories"] = $this->common_model->get_all(array("delete_flag" => 0), "id ASC", $this->data["limit"], $offset);
+        $this->data["count_categories"] = $this->common_model->get_count(array("delete_flag" => 0));
+        
+        // generate pagination
+        $path = "cms/blog_categories/search/";
+        $this->data["pagination"] = $this->generate_pagination($path, $this->data["count_categories"], $this->data["limit"], 4);
 
 		// load view
         $this->load_view("blog/categories", $this->data);
@@ -52,18 +75,18 @@ class Blog_categories extends MY_Controller {
         $this->set_js("select2.full.js");
 
 		// blog category id
-		$this->data["category_id"] = (int) $this->security_clean($this->uri->segment(5, ""));
+		$this->data["category_id"] = (int) $this->security_clean($this->uri->segment(4, ""));
         
         // breadcrumbs
         $this->position['item'][2]['title'] = "Categories";
-        $this->position['item'][2]['url'] = site_url("cms/blog/categories");
+        $this->position['item'][2]['url'] = site_url("cms/blog_categories");
         
         if ($this->data["category_id"]) {
             // check category exists or not
             $this->common_model->set_table("blog_categories");
             $this->data["category"] = $this->common_model->get_row(array("id" => $this->data["category_id"]));
             if (!$this->data["category"]) {
-                define('RETURN_URL', site_url("cms/blog/categories"));
+                define('RETURN_URL', site_url("cms/blog_categories"));
                 $this->message("Illegal operation has occurred", $this->data);
             }
             $this->data["image_from_category"] = $this->data["category"]["image"];
@@ -137,7 +160,7 @@ class Blog_categories extends MY_Controller {
             );
             $this->common_model->update($upd_data, array('id' => $this->data["category_id"]));
             
-            define('RETURN_URL', site_url("cms/blog/categories"));
+            define('RETURN_URL', site_url("cms/blog_categories"));
             $this->message($message);
             return FALSE;
         } else {
@@ -145,6 +168,150 @@ class Blog_categories extends MY_Controller {
             $this->load_view("blog/category", $this->data);
         }
 	}
+    
+    public function publish() {
+        // breadcrumbs
+        $this->position['item'][2]['title'] = "Categories";
+        $this->position['item'][2]['url'] = site_url("cms/blog_categories");
+        $this->position['item'][3]['title'] = "Publish";
+        $this->data['position'] = $this->load->view("pc/parts/position", $this->position, TRUE);
+
+        // group category id
+        $cat_id = $this->input->post("cat_id");
+        if ($cat_id) {
+            $cat_id = implode(",", $cat_id);
+            $this->common_model->set_table("blog_categories");
+            $this->data["category"] = $this->common_model->get_row(array("id IN({$cat_id})" => NULL));
+            if (!$this->data["category"]) {
+                define('RETURN_URL', site_url("cms/blog_categories"));
+                $this->message("Illegal operation has occurred", $this->data);
+            }
+
+            $upd_data = array(
+                "published" => 1
+            );
+            $this->common_model->update($upd_data, array("id IN({$cat_id})" => NULL));
+        } else {
+            // blog category id
+            $this->data["category_id"] = (int) $this->security_clean($this->uri->segment(4, ""));
+            
+            if (!$this->data["category_id"] || !is_numeric($this->data["category_id"])) {
+                define('RETURN_URL', site_url("cms/blog_categories"));
+                $this->message("Illegal operation has occurred", $this->data);
+            }
+
+            $this->common_model->set_table("blog_categories");
+            $this->data["category"] = $this->common_model->get_row(array("id" => $this->data["category_id"]));
+            if (!$this->data["category"]) {
+                define('RETURN_URL', site_url("cms/blog_categories"));
+                $this->message("Illegal operation has occurred", $this->data);
+            }
+
+            $upd_data = array(
+                "published" => 1
+            );
+            $this->common_model->update($upd_data, array('id' => $this->data["category_id"]));
+        }
+        
+        $jump_url = site_url("cms/blog_categories/search");
+        header("Location: $jump_url");
+    }
+    
+    public function unpublish() {
+        // breadcrumbs
+        $this->position['item'][2]['title'] = "Categories";
+        $this->position['item'][2]['url'] = site_url("cms/blog_categories");
+        $this->position['item'][3]['title'] = "Unpublish";
+        $this->data['position'] = $this->load->view("pc/parts/position", $this->position, TRUE);
+        
+        // group category id
+        $cat_id = $this->input->post("cat_id");
+        if ($cat_id) {
+            $cat_id = implode(",", $cat_id);
+            $this->common_model->set_table("blog_categories");
+            $this->data["category"] = $this->common_model->get_row(array("id IN({$cat_id})" => NULL));
+            if (!$this->data["category"]) {
+                define('RETURN_URL', site_url("cms/blog_categories"));
+                $this->message("Illegal operation has occurred", $this->data);
+            }
+
+            $upd_data = array(
+                "published" => 0
+            );
+            $this->common_model->update($upd_data, array("id IN({$cat_id})" => NULL));
+        } else {
+            // blog category id
+            $this->data["category_id"] = (int) $this->security_clean($this->uri->segment(4, ""));
+
+            if (!$this->data["category_id"] || !is_numeric($this->data["category_id"])) {
+                define('RETURN_URL', site_url("cms/blog_categories"));
+                $this->message("Illegal operation has occurred", $this->data);
+            }
+
+            $this->common_model->set_table("blog_categories");
+            $this->data["category"] = $this->common_model->get_row(array("id" => $this->data["category_id"]));
+            if (!$this->data["category"]) {
+                define('RETURN_URL', site_url("cms/blog_categories"));
+                $this->message("Illegal operation has occurred", $this->data);
+            }
+
+            $upd_data = array(
+                "published" => 0
+            );
+            $this->common_model->update($upd_data, array('id' => $this->data["category_id"]));
+        }
+        
+        $jump_url = site_url("cms/blog_categories/search");
+        header("Location: $jump_url");
+    }
+    
+    public function trash() {
+        // breadcrumbs
+        $this->position['item'][2]['title'] = "Categories";
+        $this->position['item'][2]['url'] = site_url("cms/blog_categories");
+        $this->position['item'][3]['title'] = "Trash";
+        $this->data['position'] = $this->load->view("pc/parts/position", $this->position, TRUE);
+        
+        // group category id
+        $cat_id = $this->input->post("cat_id");
+        if ($cat_id) {
+            $cat_id = implode(",", $cat_id);
+            $this->common_model->set_table("blog_categories");
+            $this->data["category"] = $this->common_model->get_row(array("id IN({$cat_id})" => NULL));
+            if (!$this->data["category"]) {
+                define('RETURN_URL', site_url("cms/blog_categories"));
+                $this->message("Illegal operation has occurred", $this->data);
+            }
+
+            $upd_data = array(
+                "delete_flag" => 1
+            );
+            $this->common_model->update($upd_data, array("id IN({$cat_id})" => NULL));
+        } else {
+            // blog category id
+            $this->data["category_id"] = (int) $this->security_clean($this->uri->segment(4, ""));
+
+            if (!$this->data["category_id"] || !is_numeric($this->data["category_id"])) {
+                define('RETURN_URL', site_url("cms/blog_categories"));
+                $this->message("Illegal operation has occurred", $this->data);
+            }
+
+            $this->common_model->set_table("blog_categories");
+            $this->data["category"] = $this->common_model->get_row(array("id" => $this->data["category_id"]));
+            if (!$this->data["category"]) {
+                define('RETURN_URL', site_url("cms/blog_categories"));
+                $this->message("Illegal operation has occurred", $this->data);
+            }
+
+            $upd_data = array(
+                "delete_flag" => 1
+            );
+            $this->common_model->update($upd_data, array('id' => $this->data["category_id"]));
+        }
+        
+        $jump_url = site_url("cms/blog_categories/search");
+        header("Location: $jump_url");
+    }
 
     private function _upload($filename) {
         // load library
@@ -176,7 +343,7 @@ class Blog_categories extends MY_Controller {
     public function photo_del() {
         $id = $this->security_clean($this->uri->segment(5, 0));
         if (!$id) {
-            define('RETURN_URL', site_url("cms/blog/categories"));
+            define('RETURN_URL', site_url("cms/blog_categories"));
             $this->message("An error occured");
             return FALSE;
         }
@@ -184,7 +351,7 @@ class Blog_categories extends MY_Controller {
         $this->common_model->set_table("blog_categories");
         $category = $this->common_model->get_row(array("id" => $id));
         if (!$category) {
-            define('RETURN_URL', site_url("cms/blog/categories"));
+            define('RETURN_URL', site_url("cms/blog_categories"));
             $this->message("An error occured");
             return FALSE;
         }
@@ -202,7 +369,7 @@ class Blog_categories extends MY_Controller {
         );
         $this->common_model->update($upd_data, array("id" => $id));
         
-        define('RETURN_URL', site_url("cms/blog/categories/edit/".$id));
+        define('RETURN_URL', site_url("cms/blog_categories/edit/".$id));
         $this->message("Delete completely");
         return FALSE;
     }

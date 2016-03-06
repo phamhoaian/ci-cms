@@ -11,6 +11,6 @@ CREATE TABLE IF NOT EXISTS `blog_categories` (
   `published` smallint(1) NOT NULL DEFAULT '0',
   `ordering` int(11) NOT NULL DEFAULT '0',
   `image` varchar(255) NOT NULL,
-  `dele` smallint(1) NOT NULL DEFAULT '0',
+  `delete_flag` smallint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;

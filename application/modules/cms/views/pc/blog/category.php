@@ -1,7 +1,7 @@
 <?php
 $attributes = array("class" => "form-horizontal");
 $hidden = array("id" => $category_id, "image_from_category" => $image_from_category);
-$js_back = "class='btn btn-default' onClick=\"self.location.href='". site_url("cms/blog/categories") ."'\"'";
+$js_back = "class='btn btn-default' onClick=\"self.location.href='". site_url("cms/blog_categories") ."'\"'";
 
 $title = array(
 	"name" => "title",
@@ -120,7 +120,7 @@ $image = array(
                                         <h4 class="modal-title" id="myModalLabel">Are you sure want to delete category image ?</h4>
                                     </div>
                                     <div class="modal-footer">
-                                        <a href="<?php echo site_url("cms/blog/categories/photo_del/".$category["id"]); ?>" class="btn btn-primary">Delete</a>
+                                        <a href="<?php echo site_url("cms/blog_categories/photo_del/".$category["id"]); ?>" class="btn btn-primary">Delete</a>
                                         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                                     </div>
                                 </div>

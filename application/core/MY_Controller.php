@@ -1177,10 +1177,10 @@ class MY_Controller extends CI_Controller {
 			#$config['num_tag_open'] = '<span class="pager">&nbsp;';
 			#$config['num_tag_close'] = '&nbsp;</span>';
 			
-			$config['next_link'] = '次&gt;';
+			$config['next_link'] = 'Next&gt;';
 			#$config['next_tag_open'] = '<span class="pager_text">';
 			#$config['next_tag_close'] = '</span>';
-			$config['prev_link'] = '&lt;前';
+			$config['prev_link'] = '&lt;Previous';
 			#$config['prev_tag_open'] = '<span class="pager_text">';
 			#$config['prev_tag_close'] = '</span>';
 			
@@ -1215,11 +1215,11 @@ class MY_Controller extends CI_Controller {
 			
 			#$config['num_tag_open'] = '<span class="pager">&nbsp;';
 			#$config['num_tag_close'] = '&nbsp;</span>';
-			
-			$config['next_link'] = '次 &gt;';
+            
+			$config['next_link'] = 'Next &gt;';
 			#$config['next_tag_open'] = '<span class="pager_text">';
 			#$config['next_tag_close'] = '</span>';
-			$config['prev_link'] = '&lt; 前';
+			$config['prev_link'] = '&lt; Previous';
 			#$config['prev_tag_open'] = '<span class="pager_text">';
 			#$config['prev_tag_close'] = '</span>';
 			
