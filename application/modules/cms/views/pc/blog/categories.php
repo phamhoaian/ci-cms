@@ -57,6 +57,13 @@ foreach ($list_limit as $val) {
             <div class="x_title">
                 <h2>List blog categories</h2>
             </div>
+            <?php if ($this->session->flashdata('message')) { ?>
+            <div class="alert alert-success alert-dismissible fade in">
+                <button type="button" class="close" data-dismiss="alert">×</button>
+                <h4 class="alert-heading">Message</h4>
+                <p class="alert-message"><?php echo $this->session->flashdata('message'); ?></p>
+			</div>
+            <?php } ?>
             <div class="x_content">
                 <?php echo form_open(site_url("cms/blog_categories/search"), $attributes, $hidden); ?>
                 <div class="row MB5">
@@ -143,7 +150,7 @@ foreach ($list_limit as $val) {
                                             <a href="<?php echo site_url("cms/blog_categories/edit/".$category["id"]); ?>" class="btn btn-xs btn-warning">
                                                 <i class="fa fa-edit"></i>Edit
                                             </a>
-                                            <a href="<?php echo site_url("cms/blog_categories/trash/".$category["id"]); ?>" class="btn btn-xs btn-danger">
+                                            <a href="javascript:void(0)" onclick="do_delete('<?php echo site_url("cms/blog_categories/trash/".$category["id"]); ?>')" class="btn btn-xs btn-danger">
                                                 <i class="fa fa-trash"></i>Trash
                                             </a>
                                         </td>
@@ -204,4 +211,10 @@ foreach ($list_limit as $val) {
         $("input[name='cat_id[]']").attr("checked", false);
         $("input[name=boxChecked]").val(0);
     });
+    
+    function do_delete(url) {
+        if (confirm("Do you really want to trash the category?")) {
+            location.href = url;
+        }
+    }
 </script>

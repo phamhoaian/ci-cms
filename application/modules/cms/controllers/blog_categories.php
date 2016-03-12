@@ -11,6 +11,9 @@ class Blog_categories extends MY_Controller {
         // load model
         $this->load->model('common_model');
         
+        // load library
+        $this->load->library('session');
+        
         // config meta data
         $this->data["title"] = "Administrator";
 		$this->data['description'] = "Administrator - Effect, HTML5 & CSS3 template";
@@ -49,6 +52,9 @@ class Blog_categories extends MY_Controller {
         if ($this->data["limit"] == "") {
             $this->data["limit"] = 10;
         }
+        if ($this->data["limit"] == 0) {
+            $this->data["limit"] = NULL;
+        }
         
 		// breadcrumbs
         $this->position['item'][2]['title'] = "Categories";
@@ -56,7 +62,9 @@ class Blog_categories extends MY_Controller {
         
         // list categories
         $this->common_model->set_table("blog_categories");
-        $this->data["categories"] = $this->common_model->get_all(array("delete_flag" => 0), "id ASC", $this->data["limit"], $offset);
+        $categories = $this->common_model->get_all(array("delete_flag" => 0), "parent ASC");
+        $categories_tree = $this->_prepareList($categories, $categories[0]["parent"]);
+        $this->data["categories"] = array_slice($this->_array_flatten($categories_tree), $offset, $this->data["limit"]);
         $this->data["count_categories"] = $this->common_model->get_count(array("delete_flag" => 0));
         
         // generate pagination
@@ -179,6 +187,7 @@ class Blog_categories extends MY_Controller {
         // group category id
         $cat_id = $this->input->post("cat_id");
         if ($cat_id) {
+            $count = count($cat_id);
             $cat_id = implode(",", $cat_id);
             $this->common_model->set_table("blog_categories");
             $this->data["category"] = $this->common_model->get_row(array("id IN({$cat_id})" => NULL));
@@ -191,6 +200,9 @@ class Blog_categories extends MY_Controller {
                 "published" => 1
             );
             $this->common_model->update($upd_data, array("id IN({$cat_id})" => NULL));
+            
+            // flash message
+            $this->session->set_flashdata("message", "There are {$count} categories published");
         } else {
             // blog category id
             $this->data["category_id"] = (int) $this->security_clean($this->uri->segment(4, ""));
@@ -211,8 +223,10 @@ class Blog_categories extends MY_Controller {
                 "published" => 1
             );
             $this->common_model->update($upd_data, array('id' => $this->data["category_id"]));
+            
+            // flash message
+            $this->session->set_flashdata("message", "Category published");
         }
-        
         $jump_url = site_url("cms/blog_categories/search");
         header("Location: $jump_url");
     }
@@ -227,6 +241,7 @@ class Blog_categories extends MY_Controller {
         // group category id
         $cat_id = $this->input->post("cat_id");
         if ($cat_id) {
+            $count = count($cat_id);
             $cat_id = implode(",", $cat_id);
             $this->common_model->set_table("blog_categories");
             $this->data["category"] = $this->common_model->get_row(array("id IN({$cat_id})" => NULL));
@@ -239,6 +254,9 @@ class Blog_categories extends MY_Controller {
                 "published" => 0
             );
             $this->common_model->update($upd_data, array("id IN({$cat_id})" => NULL));
+            
+            // flash message
+            $this->session->set_flashdata("message", "There are {$count} categories unpublished");
         } else {
             // blog category id
             $this->data["category_id"] = (int) $this->security_clean($this->uri->segment(4, ""));
@@ -259,6 +277,9 @@ class Blog_categories extends MY_Controller {
                 "published" => 0
             );
             $this->common_model->update($upd_data, array('id' => $this->data["category_id"]));
+            
+            // flash message
+            $this->session->set_flashdata("message", "Category unpublished");
         }
         
         $jump_url = site_url("cms/blog_categories/search");
@@ -275,6 +296,7 @@ class Blog_categories extends MY_Controller {
         // group category id
         $cat_id = $this->input->post("cat_id");
         if ($cat_id) {
+            $count = count($cat_id);
             $cat_id = implode(",", $cat_id);
             $this->common_model->set_table("blog_categories");
             $this->data["category"] = $this->common_model->get_row(array("id IN({$cat_id})" => NULL));
@@ -287,6 +309,9 @@ class Blog_categories extends MY_Controller {
                 "delete_flag" => 1
             );
             $this->common_model->update($upd_data, array("id IN({$cat_id})" => NULL));
+            
+            // flash message
+            $this->session->set_flashdata("message", "There are {$count} categories trashed");
         } else {
             // blog category id
             $this->data["category_id"] = (int) $this->security_clean($this->uri->segment(4, ""));
@@ -307,6 +332,9 @@ class Blog_categories extends MY_Controller {
                 "delete_flag" => 1
             );
             $this->common_model->update($upd_data, array('id' => $this->data["category_id"]));
+            
+            // flash message
+            $this->session->set_flashdata("message", "Category trashed");
         }
         
         $jump_url = site_url("cms/blog_categories/search");
@@ -372,5 +400,53 @@ class Blog_categories extends MY_Controller {
         define('RETURN_URL', site_url("cms/blog_categories/edit/".$id));
         $this->message("Delete completely");
         return FALSE;
+    }
+    
+    private function _array_flatten($array, $depth = 1) { 
+        if (!is_array($array)) {
+            return FALSE; 
+        } 
+        $result = array(); 
+        foreach ($array as $key => $value) {
+            $tree_space = '';
+            if ($depth > 1) {
+                for ($i = 1; $i < $depth; $i++) {
+                    $tree_space .= ".&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+                }
+                $tree_space .= '<sup>|_</sup>';
+            }
+            $value["name"] = $tree_space.'&nbsp;'.$value["name"];
+            array_push($result, $value);
+            if (!empty($value["children"])) {
+                $result = array_merge($result, $this->_array_flatten($value["children"], $depth + 1));
+            }
+        } 
+        return $result; 
+    } 
+    
+    private function _prepareList(array $items, $pid = 0)
+    {
+        $output = array();
+
+        # loop through the items
+        foreach ($items as $item) {
+
+            # Whether the parent_id of the item matches the current $pid
+            if ((int) $item['parent'] == $pid) {
+
+                # Call the function recursively, use the item's id as the parent's id
+                # The function returns the list of children or an empty array()
+                if ($children = $this->_prepareList($items, $item['id'])) {
+
+                    # Store all children of the current item
+                    $item['children'] = $children;
+                }
+
+                # Fill the output
+                $output[] = $item;
+            }
+        }
+
+        return $output;
     }
 }
