@@ -45,7 +45,7 @@ class Blog_categories extends MY_Controller {
         $this->set_js("icheck.min.js");
         
         // offset
-        $offset = (int) $this->uri->segment(4, 0);
+        $offset = (int) $this->uri->segment(5, 0);
         
         // limit
         $this->data["limit"] = $this->input->post('limit');
@@ -60,16 +60,33 @@ class Blog_categories extends MY_Controller {
         $this->position['item'][2]['title'] = "Categories";
         $this->data['position'] = $this->load->view("pc/parts/position", $this->position, TRUE);
         
+        // status
+        $this->data["status"] = $this->security_clean($this->uri->segment(4));
+        if (!$this->data["status"]) {
+            $this->data["status"] = $this->input->post('status');
+        }
+        if (!$this->data["status"]) {
+            $this->data["status"] = "active";
+        }
+        $where = array();
+        if ($this->data["status"] == "active") {
+            $where["delete_flag"] = 0;
+        }
+        
         // list categories
         $this->common_model->set_table("blog_categories");
-        $categories = $this->common_model->get_all(array("delete_flag" => 0), "parent ASC");
-        $categories_tree = $this->_prepareList($categories, $categories[0]["parent"]);
+        $categories = $this->common_model->get_all($where, "parent ASC");
+        if ($categories) {
+            $categories_tree = $this->_prepareList($categories, $categories[0]["parent"]);
+        } else {
+            $categories_tree = array();
+        }
         $this->data["categories"] = array_slice($this->_array_flatten($categories_tree), $offset, $this->data["limit"]);
-        $this->data["count_categories"] = $this->common_model->get_count(array("delete_flag" => 0));
+        $this->data["count_categories"] = $this->common_model->get_count($where);
         
         // generate pagination
-        $path = "cms/blog_categories/search/";
-        $this->data["pagination"] = $this->generate_pagination($path, $this->data["count_categories"], $this->data["limit"], 4);
+        $path = "cms/blog_categories/search/".$this->data["status"];
+        $this->data["pagination"] = $this->generate_pagination($path, $this->data["count_categories"], $this->data["limit"], 5);
 
 		// load view
         $this->load_view("blog/categories", $this->data);
@@ -296,7 +313,25 @@ class Blog_categories extends MY_Controller {
         // group category id
         $cat_id = $this->input->post("cat_id");
         if ($cat_id) {
-            $count = count($cat_id);
+            $count = 0;
+            
+            // move to trash child categories
+            foreach ($cat_id as $cid) {
+                $child_cat = $this->_listChildCategory($cid);
+                if ($child_cat) {
+                    $count += count($child_cat);
+                    $child_cat = $this->_array_flatten($child_cat);
+                    $child_cat = implode(",", array_column($child_cat, "id"));
+                    $this->common_model->set_table("blog_categories");
+                    $upd_data = array(
+                        "delete_flag" => 1
+                    );
+                    $this->common_model->update($upd_data, array("id IN({$child_cat})" => NULL));
+                }
+            }
+            
+            // move to trash categories
+            $count += count($cat_id);
             $cat_id = implode(",", $cat_id);
             $this->common_model->set_table("blog_categories");
             $this->data["category"] = $this->common_model->get_row(array("id IN({$cat_id})" => NULL));
@@ -311,8 +346,9 @@ class Blog_categories extends MY_Controller {
             $this->common_model->update($upd_data, array("id IN({$cat_id})" => NULL));
             
             // flash message
-            $this->session->set_flashdata("message", "There are {$count} categories trashed");
+            $this->session->set_flashdata("message", "There are {$count} categories moved to trash");
         } else {
+            $count = 0;
             // blog category id
             $this->data["category_id"] = (int) $this->security_clean($this->uri->segment(4, ""));
 
@@ -320,7 +356,8 @@ class Blog_categories extends MY_Controller {
                 define('RETURN_URL', site_url("cms/blog_categories"));
                 $this->message("Illegal operation has occurred", $this->data);
             }
-
+            
+            // move to trash the category
             $this->common_model->set_table("blog_categories");
             $this->data["category"] = $this->common_model->get_row(array("id" => $this->data["category_id"]));
             if (!$this->data["category"]) {
@@ -328,17 +365,183 @@ class Blog_categories extends MY_Controller {
                 $this->message("Illegal operation has occurred", $this->data);
             }
 
+            $count++;
             $upd_data = array(
                 "delete_flag" => 1
             );
             $this->common_model->update($upd_data, array('id' => $this->data["category_id"]));
             
+            // move to trash child categories
+            $child_cat = $this->_listChildCategory($this->data["category_id"]);
+            if ($child_cat) {
+                $count += count($child_cat);
+                $child_cat = $this->_array_flatten($child_cat);
+                $child_cat = implode(",", array_column($child_cat, "id"));
+                $this->common_model->set_table("blog_categories");
+                $upd_data = array(
+                    "delete_flag" => 1
+                );
+                $this->common_model->update($upd_data, array("id IN({$child_cat})" => NULL));
+            }
+            
             // flash message
-            $this->session->set_flashdata("message", "Category trashed");
+            if ($count == 1 ) {
+                $this->session->set_flashdata("message", "Category moved to trash");
+            } else {
+                $this->session->set_flashdata("message", "There are {$count} categories moved to trash");
+            }
         }
         
         $jump_url = site_url("cms/blog_categories/search");
         header("Location: $jump_url");
+    }
+    
+    public function restore() {
+        // breadcrumbs
+        $this->position['item'][2]['title'] = "Categories";
+        $this->position['item'][2]['url'] = site_url("cms/blog_categories");
+        $this->position['item'][3]['title'] = "Restore";
+        $this->data['position'] = $this->load->view("pc/parts/position", $this->position, TRUE);
+
+        // group category id
+        $cat_id = $this->input->post("cat_id");
+        if ($cat_id) {
+            $count = 0;
+            $cat_id = implode(",", $cat_id);
+            $this->common_model->set_table("blog_categories");
+            $this->data["category"] = $this->common_model->get_all(array("id IN({$cat_id})" => NULL, "delete_flag" => 1));
+            if (!$this->data["category"]) {
+                define('RETURN_URL', site_url("cms/blog_categories/search/trash"));
+                $this->message("Illegal operation has occurred", $this->data);
+            }
+            
+            foreach ($this->data["category"] as $category) {
+                $this->data["parent"] = $this->common_model->get_row(array("id" => $category["parent"], "delete_flag" => 1));
+                if ($this->data["parent"]) {
+                    // flash message
+                    $this->session->set_flashdata("error", "Some of the categories have not been restored because their parent category is in trash");
+                } else {
+                    $count++;
+                    $upd_data = array(
+                        "delete_flag" => 0
+                    );
+                    $this->common_model->update($upd_data, array("id" => $category["id"]));
+
+                    // flash message
+                    $this->session->set_flashdata("message", "There are {$count} categories restored");
+                }
+            }
+        } else {
+            // blog category id
+            $this->data["category_id"] = (int) $this->security_clean($this->uri->segment(4, ""));
+            
+            if (!$this->data["category_id"] || !is_numeric($this->data["category_id"])) {
+                define('RETURN_URL', site_url("cms/blog_categories/search/trash"));
+                $this->message("Illegal operation has occurred", $this->data);
+            }
+            
+            $this->common_model->set_table("blog_categories");
+            $this->data["category"] = $this->common_model->get_row(array("id" => $this->data["category_id"], "delete_flag" => 1));
+            if (!$this->data["category"]) {
+                define('RETURN_URL', site_url("cms/blog_categories/search/trash"));
+                $this->message("Illegal operation has occurred", $this->data);
+            }
+            
+            $this->data["parent"] = $this->common_model->get_row(array("id" => $this->data["category"]["parent"], "delete_flag" => 1));
+            if ($this->data["parent"]) {
+                // flash message
+                $this->session->set_flashdata("error", "The category have not been restored because its parent category is in trash");
+            } else {
+                $upd_data = array(
+                    "delete_flag" => 0
+                );
+                $this->common_model->update($upd_data, array('id' => $this->data["category_id"]));
+
+                // flash message
+                $this->session->set_flashdata("message", "Category restored");
+            }
+        }
+        $jump_url = site_url("cms/blog_categories/search/trash");
+        header("Location: $jump_url");
+    }
+    
+    public function delete() {
+        // breadcrumbs
+        $this->position['item'][2]['title'] = "Categories";
+        $this->position['item'][2]['url'] = site_url("cms/blog_categories");
+        $this->position['item'][3]['title'] = "Delete";
+        $this->data['position'] = $this->load->view("pc/parts/position", $this->position, TRUE);
+
+        // group category id
+        $cat_id = $this->input->post("cat_id");
+        if ($cat_id) {
+            $count = 0;
+            $cat_id = implode(",", $cat_id);
+            $this->common_model->set_table("blog_categories");
+            $this->data["category"] = $this->common_model->get_all(array("id IN({$cat_id})" => NULL, "delete_flag" => 1));
+            if (!$this->data["category"]) {
+                define('RETURN_URL', site_url("cms/blog_categories/search/trash"));
+                $this->message("Illegal operation has occurred", $this->data);
+            }
+            
+            foreach ($this->data["category"] as $category) {
+                $this->data["category_child"] = $this->common_model->get_row(array("parent" => $category["id"], "delete_flag" => 1));
+                if ($this->data["category_child"]) {
+                    // flash message
+                    $this->session->set_flashdata("error", "Some of the categories have not been deleted because they have child categories");
+                } else {
+                    $count++;
+                    $this->common_model->delete(array("id" => $category["id"]));
+
+                    // flash message
+                    $this->session->set_flashdata("message", "There are {$count} categories deleted");
+                }
+            }
+        } else {
+            // blog category id
+            $this->data["category_id"] = (int) $this->security_clean($this->uri->segment(4, ""));
+            
+            if (!$this->data["category_id"] || !is_numeric($this->data["category_id"])) {
+                define('RETURN_URL', site_url("cms/blog_categories/search/trash"));
+                $this->message("Illegal operation has occurred", $this->data);
+            }
+
+            $this->common_model->set_table("blog_categories");
+            $this->data["category"] = $this->common_model->get_row(array("id" => $this->data["category_id"], "delete_flag" => 1));
+            if (!$this->data["category"]) {
+                define('RETURN_URL', site_url("cms/blog_categories/search/trash"));
+                $this->message("Illegal operation has occurred", $this->data);
+            }
+            
+            $this->data["category_child"] = $this->common_model->get_all(array("parent" => $this->data["category_id"], "delete_flag" => 1));
+            if ($this->data["category_child"]) {
+                // flash message
+                $this->session->set_flashdata("error", "The category have not been deleted because it has child categories");
+            } else {
+                $this->common_model->delete(array('id' => $this->data["category_id"]));
+            
+                // flash message
+                $this->session->set_flashdata("message", "Category deleted");
+            }
+        }
+        $jump_url = site_url("cms/blog_categories/search/trash");
+        header("Location: $jump_url");
+    }
+    
+    private function _listChildCategory($cat_id = 0) {
+        $result = array();
+        $this->common_model->set_table("blog_categories");
+        $child = $this->common_model->get_all(array("delete_flag" => 0, "parent" => $cat_id));
+        if ($child) {
+            foreach ($child as $item) {
+                if ($val = $this->_listChildCategory($item["id"])) {
+                    $item["children"] = $val;
+                }
+                $result[] = $item;
+            }
+        }
+        
+        return $result;
     }
 
     private function _upload($filename) {
@@ -424,7 +627,7 @@ class Blog_categories extends MY_Controller {
         return $result; 
     } 
     
-    private function _prepareList(array $items, $pid = 0)
+    private function _prepareList($items = array(), $pid = 0)
     {
         $output = array();
 

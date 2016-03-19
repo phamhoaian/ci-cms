@@ -1201,10 +1201,10 @@ class MY_Controller extends CI_Controller {
 			# ページ番号情報がどのURIセグメントに含まれるか指定します。
 			$config['uri_segment']    = $uri_segment;
 			# 生成するリンクのテンプレートを指定します。
-			$config['first_link']     = '&laquo; 最初';
+			$config['first_link']     = '&laquo; First';
 			#$config['first_tag_open'] = '&nbsp;<span class="pager_text">';
 			#$config['first_tag_close'] = '</span>&nbsp;';
-			$config['last_link']      = '最後 &raquo;';
+			$config['last_link']      = 'Last &raquo;';
 			#$config['last_tag_open'] = '&nbsp;<span class="pager_text">';
 			#$config['last_tag_close'] = '</span>&nbsp;';
 			

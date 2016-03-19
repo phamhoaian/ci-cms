@@ -4,7 +4,8 @@ $attributes = array(
     "id" => "categoriesForm"
 );
 $hidden = array(
-    "boxChecked" => 0
+    "boxChecked" => 0,
+    "status" => $status
 );
 $search = array(
     "name" => "search",
@@ -31,6 +32,16 @@ foreach ($list_limit as $val) {
             <h3>Blog Categories</h3>
         </div>
         <div class="col-md-6 toolbox text-right">
+            <?php if ($status == "trash") { ?>
+            <button onclick="if (document.categoriesForm.boxChecked.value==0){alert('Please first make a selection from the list.');} else {document.categoriesForm.action = '<?php echo site_url("cms/blog_categories/restore") ?>';document.categoriesForm.submit();}" class="btn btn-app">
+                <i class="fa fa-check"></i>
+                Restore
+            </button>
+            <button onclick="if (document.categoriesForm.boxChecked.value==0){alert('Please first make a selection from the list.');} else { do_delete_multi('<?php echo site_url("cms/blog_categories/delete") ?>'); }" class="btn btn-app">
+                <i class="fa fa-close"></i>
+                Delete
+            </button>
+            <?php } else { ?>
             <a href="<?php echo site_url("cms/blog_categories/edit"); ?>" class="btn btn-app">
                 <i class="fa fa-plus-circle"></i>
                 New
@@ -43,10 +54,11 @@ foreach ($list_limit as $val) {
                 <i class="fa fa-close"></i>
                 Unpublish
             </button>
-            <button onclick="if (document.categoriesForm.boxChecked.value==0){alert('Please first make a selection from the list.');} else {document.categoriesForm.action = '<?php echo site_url("cms/blog_categories/trash") ?>';document.categoriesForm.submit();}" class="btn btn-app">
+            <button onclick="if (document.categoriesForm.boxChecked.value==0){alert('Please first make a selection from the list.');} else { do_trash_multi('<?php echo site_url("cms/blog_categories/trash") ?>'); }" class="btn btn-app">
                 <i class="fa fa-trash"></i>
                 Trash
             </button>
+            <?php } ?>
         </div>
     </div>
 </div>
@@ -57,6 +69,13 @@ foreach ($list_limit as $val) {
             <div class="x_title">
                 <h2>List blog categories</h2>
             </div>
+            <?php if ($this->session->flashdata('error')) { ?>
+            <div class="alert alert-danger alert-dismissible fade in">
+                <button type="button" class="close" data-dismiss="alert">×</button>
+                <h4 class="alert-heading">Error</h4>
+                <p class="alert-message"><?php echo $this->session->flashdata('error'); ?></p>
+			</div>
+            <?php } ?>
             <?php if ($this->session->flashdata('message')) { ?>
             <div class="alert alert-success alert-dismissible fade in">
                 <button type="button" class="close" data-dismiss="alert">×</button>
@@ -69,9 +88,11 @@ foreach ($list_limit as $val) {
                 <div class="row MB5">
                     <div class="col-md-6 col-sm-6 col-xs-12">
                         <label>
-                            Show
-                            <?php echo form_dropdown("limit", $select_limit, $select_limit_selected, "id='limit' style='padding: 5px;' onchange='this.form.submit()'"); ?>
-                            entries
+                            Status:
+                            <div class="btn-group">
+                                <a href="<?php echo site_url("cms/blog_categories/search/active"); ?>" class="btn btn-sm btn-success <?php if($status != "trash") { echo "active"; } ?>">Active</a>
+                                <a href="<?php echo site_url("cms/blog_categories/search/trash"); ?>" class="btn btn-sm btn-danger <?php if($status == "trash") { echo "active"; } ?>">Trash</a>
+                            </div>
                         </label>
                     </div>
                     <div class="col-md-6 col-sm-6 col-xs-12 text-right">
@@ -117,14 +138,37 @@ foreach ($list_limit as $val) {
                                         }
                                     ?>
                                     <tr class="<?php echo $pos; ?> pointer">
-                                        <td><input type="checkbox" class="flat" name="cat_id[]" value="<?php echo $category["id"]; ?>"></td>
+                                    <td><?php if ((!$category["delete_flag"] && $status == "active") || ($category["delete_flag"] && $status == "trash")) { ?><input type="checkbox" class="flat" name="cat_id[]" value="<?php echo $category["id"]; ?>"><?php } ?></td>
                                         <td>
+                                        <?php if ($status == "trash") { ?>
+                                            <?php if (!$category["delete_flag"]) { ?>
+                                            <span>
+                                                <?php echo $category["name"]; ?> <small>(0 Active/ 0 Trashed)</small>
+                                            </span>
+                                            <?php } else { ?>
+                                            <strong>
+                                                <?php echo $category["name"]; ?> <small>(0 Active/ 0 Trashed)</small>
+                                            </strong>
+                                            <?php } ?>
+                                        <?php } else { ?>
                                             <a href="<?php echo site_url("cms/blog_categories/edit/".$category["id"]); ?>">
                                                 <?php echo $category["name"]; ?> <small>(0 Active/ 0 Trashed)</small>
                                             </a>
+                                        <?php } ?>
                                         </td>
                                         <td><?php echo $category["description"]; ?></td>
                                         <td class="text-center">
+                                        <?php if ($status == "trash") { ?>
+                                            <?php if ($category["published"]) { ?>
+                                            <span class="published btn btn-xs btn-default">
+                                                <i class="fa fa-check"></i>
+                                            </span>
+                                            <?php } else { ?>
+                                            <span class="published btn btn-xs btn-default">
+                                                <i class="fa fa-close"></i>
+                                            </span>
+                                            <?php } ?>
+                                        <?php } else { ?>
                                             <?php if ($category["published"]) { ?>
                                             <a data-toggle="tooltip" data-placement="top" data-original-title="Unpublish item" href="<?php echo site_url("cms/blog_categories/unpublish/".$category["id"]); ?>" class="published btn btn-xs btn-default">
                                                 <i class="fa fa-check"></i>
@@ -134,6 +178,7 @@ foreach ($list_limit as $val) {
                                                 <i class="fa fa-close"></i>
                                             </a>
                                             <?php } ?>
+                                        <?php } ?>
                                         </td>
                                         <td class="text-center image">
                                             <?php 
@@ -147,18 +192,29 @@ foreach ($list_limit as $val) {
                                             <?php } ?>
                                         </td>
                                         <td class="text-center">
+                                            <?php if ($status == "trash") { ?>
+                                            <a href="<?php echo site_url("cms/blog_categories/restore/".$category["id"]); ?>" class="btn btn-xs btn-success <?php if (!$category["delete_flag"]) { echo "disabled"; } ?>">
+                                                <i class="fa fa-check"></i>Retore
+                                            </a>
+                                            <a href="javascript:void(0)" onclick="do_delete('<?php echo site_url("cms/blog_categories/delete/".$category["id"]); ?>')" class="btn btn-xs btn-danger <?php if (!$category["delete_flag"]) { echo "disabled"; } ?>">
+                                                <i class="fa fa-close"></i>Delete
+                                            </a>
+                                            <?php } else { ?>
                                             <a href="<?php echo site_url("cms/blog_categories/edit/".$category["id"]); ?>" class="btn btn-xs btn-warning">
                                                 <i class="fa fa-edit"></i>Edit
                                             </a>
-                                            <a href="javascript:void(0)" onclick="do_delete('<?php echo site_url("cms/blog_categories/trash/".$category["id"]); ?>')" class="btn btn-xs btn-danger">
+                                            <a href="javascript:void(0)" onclick="do_trash('<?php echo site_url("cms/blog_categories/trash/".$category["id"]); ?>')" class="btn btn-xs btn-danger">
                                                 <i class="fa fa-trash"></i>Trash
                                             </a>
+                                            <?php } ?>
                                         </td>
                                     </tr>
                                     <?php endforeach; ?>
                                     <?php } else { ?>
-                                    <tr class="pointer" colspan="6">
-                                        No data found
+                                    <tr class="pointer">
+                                        <td colspan="6">
+                                            No data found
+                                        </td>
                                     </tr>
                                     <?php } ?>
                                 </tbody>
@@ -167,14 +223,21 @@ foreach ($list_limit as $val) {
                     </div>
                 </div>
                 <!-- /categories -->
-                <?php if ($pagination) { ?>
                 <div class="row">
-                    <div class="col-md-12 col-sm-12 col-xs-12 text-right">
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <label>
+                            Show
+                            <?php echo form_dropdown("limit", $select_limit, $select_limit_selected, "id='limit' style='padding: 5px;' onchange='this.form.submit()'"); ?>
+                            entries
+                        </label>
+                    </div>
+                    <?php if ($pagination) { ?>
+                    <div class="col-md-6 col-sm-6 col-xs-12 text-right">
                         <?php echo $pagination; ?>
                     </div>
+                     <!-- /pagination -->
+                    <?php } ?>
                 </div>
-                <!-- /pagination -->
-                <?php } ?>
                 <?php echo form_close(); ?>
             </div>
         </div>
@@ -212,9 +275,31 @@ foreach ($list_limit as $val) {
         $("input[name=boxChecked]").val(0);
     });
     
-    function do_delete(url) {
+    function do_trash(url) {
         if (confirm("Do you really want to trash the category?")) {
             location.href = url;
+        }
+    }
+    
+    function do_delete(url) {
+        if (confirm("Do you really want to delete the category?")) {
+            location.href = url;
+        }
+    }
+    
+    function do_trash_multi(url) {
+        var cnf = confirm("WARNING! You are about to trash the selected categories, their children categories and all their included items!");
+        if (cnf == true) {
+            document.categoriesForm.action = url;
+            document.categoriesForm.submit();
+        }
+    }
+    
+    function do_delete_multi(url) {
+        var cnf = confirm("WARNING! Are you sure you want to delete selected categories?");
+        if (cnf == true) {
+            document.categoriesForm.action = url;
+            document.categoriesForm.submit();
         }
     }
 </script>

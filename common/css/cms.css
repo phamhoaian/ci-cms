@@ -30,8 +30,13 @@ hr {
 .btn-success:focus,
 .btn-success.focus,
 .btn-success:active,
-.btn-success.active {
+.btn-success.active,
+.btn-success.disabled {
     background-color:#19A98B;
+}
+.btn-group > .btn.active {
+    pointer-events: none;
+    cursor: default;
 }
 .form-group input[type=file] {
     border: none;
