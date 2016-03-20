@@ -365,6 +365,9 @@ table.jambo_table thead {
     background: rgba(52, 73, 94, 0.94);
     color: #ECF0F1;
 }
+table.jambo_table thead .column-title {
+    white-space: nowrap;
+}
 table.jambo_table tbody tr td {
     vertical-align: middle;
 }
@@ -391,6 +394,14 @@ table.jambo_table tbody tr.selected {
 table.jambo_table tbody tr.selected td {
     border-top: 1px solid rgba(38, 185, 154, 0.40);
     border-bottom: 1px solid rgba(38, 185, 154, 0.40);
+}
+#searchCategories {
+    width: 350px;
+    float: right;
+}
+#searchCategories .form-control {
+    border-radius: 4px 0 0 4px;
+    font-size: 13px;
 }
 /* SIDEBAR FOOTER */
 .sidebar-footer {
@@ -436,7 +447,7 @@ table.jambo_table tbody tr.selected td {
 .btn.btn-app {
     position: relative;
     padding: 10px 5px;
-    margin: 0 0 10px 10px;
+    margin: 0 0 15px 10px;
     min-width: 80px;
     height: 60px;
     -webkit-box-shadow: none;
@@ -587,11 +598,31 @@ table.jambo_table tbody tr.selected td {
     border-color: rgba(38, 185, 154, 0.59) !important;
     color: #fff;
 }
+@media (max-width: 1024px) {
+    table.jambo_table .btn {
+        margin: 2px 0;
+    }
+}
 @media (max-width: 991px) {
     .main .left-col {
         display: none;
     }
     .main .right-col {
         margin-left: 0;
+    }
+    .main .right-col .main-content {
+        padding: 10px;
+    }
+    .x_panel {
+        padding: 10px;
+    }
+}
+@media (max-width: 568px) {
+    #searchCategories {
+        width: 100%;
+        margin: 10px 0 5px;
+    }
+    .paging {
+        margin: 5px 0;
     }
 }

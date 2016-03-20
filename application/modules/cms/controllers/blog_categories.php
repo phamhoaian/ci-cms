@@ -44,8 +44,9 @@ class Blog_categories extends MY_Controller {
         $this->set_css("green.css");
         $this->set_js("icheck.min.js");
         
-        // offset
-        $offset = (int) $this->uri->segment(5, 0);
+        // breadcrumbs
+        $this->position['item'][2]['title'] = "Categories";
+        $this->data['position'] = $this->load->view("pc/parts/position", $this->position, TRUE);
         
         // limit
         $this->data["limit"] = $this->input->post('limit');
@@ -56,9 +57,19 @@ class Blog_categories extends MY_Controller {
             $this->data["limit"] = NULL;
         }
         
-		// breadcrumbs
-        $this->position['item'][2]['title'] = "Categories";
-        $this->data['position'] = $this->load->view("pc/parts/position", $this->position, TRUE);
+        // keyword
+        $key = $this->security_clean($this->uri->segment(5));
+        if ($this->input->post('search')) {
+            $key = $this->security_clean($this->input->post('search'));
+        }
+        if ($key === "-") {
+            $key = "";
+        }
+        $key = trim($key);
+        $like = key2like($key);
+        
+        // offset
+        $offset = (int) $this->uri->segment(6, 0);
         
         // status
         $this->data["status"] = $this->security_clean($this->uri->segment(4));
@@ -71,22 +82,32 @@ class Blog_categories extends MY_Controller {
         $where = array();
         if ($this->data["status"] == "active") {
             $where["delete_flag"] = 0;
+        } else {
+            if ($key) {
+                $where["delete_flag"] = 1;
+            }
         }
         
         // list categories
         $this->common_model->set_table("blog_categories");
-        $categories = $this->common_model->get_all($where, "parent ASC");
+        $categories = $this->common_model->like($where, array("name" => $like),"parent ASC");
         if ($categories) {
             $categories_tree = $this->_prepareList($categories, $categories[0]["parent"]);
         } else {
             $categories_tree = array();
         }
-        $this->data["categories"] = array_slice($this->_array_flatten($categories_tree), $offset, $this->data["limit"]);
-        $this->data["count_categories"] = $this->common_model->get_count($where);
+        $this->data["categories"] = array_slice($this->_array_flatten($categories_tree, 1, "list"), $offset, $this->data["limit"]);
+        $this->data["count_categories"] = $this->common_model->get_count($where, array("name" => $like));
         
         // generate pagination
-        $path = "cms/blog_categories/search/".$this->data["status"];
-        $this->data["pagination"] = $this->generate_pagination($path, $this->data["count_categories"], $this->data["limit"], 5);
+        $this->data["key"] = "-";
+        $this->data["key_disp"] = "";
+        if ($key) {
+            $this->data["key"] = rawurlencode($key);
+            $this->data["key_disp"] = $key;
+        }
+        $path = "cms/blog_categories/search/".$this->data["status"]."/".$this->data["key"];
+        $this->data["pagination"] = $this->generate_pagination($path, $this->data["count_categories"], $this->data["limit"], 6);
 
 		// load view
         $this->load_view("blog/categories", $this->data);
@@ -143,7 +164,13 @@ class Blog_categories extends MY_Controller {
         if ($this->data["category_id"] && $this->data["category"]) {
             $where["id !="] = $this->data["category_id"];
         }
-        $this->data["list_categories"] = $this->common_model->get_all($where, "id ASC");
+        $categories = $this->common_model->get_all($where, "parent ASC");
+        if ($categories) {
+            $categories_tree = $this->_prepareList($categories, $categories[0]["parent"]);
+        } else {
+            $categories_tree = array();
+        }
+        $this->data["list_categories"] = array_slice($this->_array_flatten($categories_tree, 1, "form"), 0);
 
         // form validation
         $this->load->helper('form');
@@ -605,7 +632,7 @@ class Blog_categories extends MY_Controller {
         return FALSE;
     }
     
-    private function _array_flatten($array, $depth = 1) { 
+    private function _array_flatten($array, $depth = 1, $type = "") { 
         if (!is_array($array)) {
             return FALSE; 
         } 
@@ -613,15 +640,22 @@ class Blog_categories extends MY_Controller {
         foreach ($array as $key => $value) {
             $tree_space = '';
             if ($depth > 1) {
-                for ($i = 1; $i < $depth; $i++) {
-                    $tree_space .= ".&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+                if (isset($type) && $type == "list" ) {
+                    for ($i = 1; $i < $depth; $i++) {
+                        $tree_space .= ".&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+                    }
+                    $tree_space .= '<sup>|_</sup>';
                 }
-                $tree_space .= '<sup>|_</sup>';
+                if (isset($type) && $type == "form" ) {
+                    for ($i = 1; $i < $depth; $i++) {
+                        $tree_space .= "-&nbsp;-&nbsp;-&nbsp;";
+                    }
+                }
             }
             $value["name"] = $tree_space.'&nbsp;'.$value["name"];
             array_push($result, $value);
             if (!empty($value["children"])) {
-                $result = array_merge($result, $this->_array_flatten($value["children"], $depth + 1));
+                $result = array_merge($result, $this->_array_flatten($value["children"], $depth + 1, $type));
             }
         } 
         return $result; 

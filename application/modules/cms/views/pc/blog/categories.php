@@ -10,7 +10,9 @@ $hidden = array(
 $search = array(
     "name" => "search",
     "id" => "search",
-    "value" => set_value("search", "")
+    "class" => "form-control",
+    "value" => $key_disp,
+    "placeholder" => "Search for categories"
 );
 $select_limit = array();
 $select_limit_selected = "";
@@ -84,8 +86,8 @@ foreach ($list_limit as $val) {
 			</div>
             <?php } ?>
             <div class="x_content">
-                <?php echo form_open(site_url("cms/blog_categories/search"), $attributes, $hidden); ?>
-                <div class="row MB5">
+                <?php echo form_open(site_url("cms/blog_categories/search/".$status), $attributes, $hidden); ?>
+                <div class="row MB10">
                     <div class="col-md-6 col-sm-6 col-xs-12">
                         <label>
                             Status:
@@ -96,11 +98,15 @@ foreach ($list_limit as $val) {
                         </label>
                     </div>
                     <div class="col-md-6 col-sm-6 col-xs-12 text-right">
-                        <label>
-                            Search all columns:
+                        <div id="searchCategories" class="input-group input-group-sm">
                             <?php echo form_input($search); ?>
                             <?php echo form_error($search["name"]); ?>
-                        </label>
+                            <div class="input-group-btn">
+                                <button type="submit" class="btn btn-sm btn-primary">
+                                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <!-- /control -->
@@ -111,9 +117,9 @@ foreach ($list_limit as $val) {
                                 <colgroup>
                                     <col width="5%">
                                     <col width="30%">
-                                    <col width="30%">
+                                    <col width="30%" class="hidden-xs">
                                     <col width="10%">
-                                    <col width="10%">
+                                    <col width="10%" class="hidden-xs">
                                     <col width="15%">
                                 </colgroup>
                                 <thead>
@@ -122,9 +128,9 @@ foreach ($list_limit as $val) {
                                             <input type="checkbox" id="check-all" class="flat">
                                         </th>
                                         <th class="column-title">Title</th>
-                                        <th class="column-title">Description</th>
+                                        <th class="column-title hidden-xs">Description</th>
                                         <th class="column-title text-center">Published</th>
-                                        <th class="column-title text-center">Image</th>
+                                        <th class="column-title text-center hidden-xs">Image</th>
                                         <th class="column-title text-center">Action</th>
                                     </tr>
                                 </thead>
@@ -156,7 +162,7 @@ foreach ($list_limit as $val) {
                                             </a>
                                         <?php } ?>
                                         </td>
-                                        <td><?php echo $category["description"]; ?></td>
+                                        <td class="hidden-xs"><?php echo $category["description"]; ?></td>
                                         <td class="text-center">
                                         <?php if ($status == "trash") { ?>
                                             <?php if ($category["published"]) { ?>
@@ -180,7 +186,7 @@ foreach ($list_limit as $val) {
                                             <?php } ?>
                                         <?php } ?>
                                         </td>
-                                        <td class="text-center image">
+                                        <td class="text-center image hidden-xs">
                                             <?php 
                                             $file_dir = FCPATH.$this->out_img_dir."/";
                                             $file200 = $file_dir.$category["id"]."_200.".$category["image"];
@@ -276,13 +282,13 @@ foreach ($list_limit as $val) {
     });
     
     function do_trash(url) {
-        if (confirm("Do you really want to trash the category?")) {
+        if (confirm("Do you really want to move selected category to trash?")) {
             location.href = url;
         }
     }
     
     function do_delete(url) {
-        if (confirm("Do you really want to delete the category?")) {
+        if (confirm("Do you really want to delete selected category?")) {
             location.href = url;
         }
     }
