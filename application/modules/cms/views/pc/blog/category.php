@@ -51,10 +51,24 @@ $image = array(
 			<div class="x_title">
 				<h2><?php echo $page_title; ?></h2>
 			</div>
+            <?php if ($this->session->flashdata('error')) { ?>
+            <div class="alert alert-danger alert-dismissible fade in">
+                <button type="button" class="close" data-dismiss="alert">×</button>
+                <h4 class="alert-heading">Error</h4>
+                <p class="alert-message"><?php echo $this->session->flashdata('error'); ?></p>
+			</div>
+            <?php } ?>
+            <?php if ($this->session->flashdata('message')) { ?>
+            <div class="alert alert-success alert-dismissible fade in">
+                <button type="button" class="close" data-dismiss="alert">×</button>
+                <h4 class="alert-heading">Message</h4>
+                <p class="alert-message"><?php echo $this->session->flashdata('message'); ?></p>
+			</div>
+            <?php } ?>
 			<div class="x_content">
 				<?php echo form_open_multipart($this->uri->uri_string(), $attributes, $hidden); ?>
 				<div class="form-group">
-					<label for="title" class="control-label col-md-3 col-sm-3 col-xs-12">
+					<label for="title" class="control-label col-md-2 col-sm-3 col-xs-12">
 						Title
 						<span class="required">*</span>
 					</label>
@@ -64,9 +78,8 @@ $image = array(
 					</div>
 				</div>
 				<div class="form-group">
-					<label for="title" class="control-label col-md-3 col-sm-3 col-xs-12">
+					<label for="title" class="control-label col-md-2 col-sm-3 col-xs-12">
 						Title alias (URL)
-						<span class="required">*</span>
 					</label>
 					<div class="col-md-6 col-sm-6 col-xs-12">
 						<?php echo form_input($alias); ?>
@@ -74,7 +87,7 @@ $image = array(
 					</div>
 				</div>
 				<div class="form-group">
-					<label for="title" class="control-label col-md-3 col-sm-3 col-xs-12">
+					<label for="title" class="control-label col-md-2 col-sm-3 col-xs-12">
 						Parent category
 					</label>
 					<div class="col-md-6 col-sm-6 col-xs-12">
@@ -83,7 +96,7 @@ $image = array(
 					</div>
 				</div>
 				<div class="form-group">
-					<label for="title" class="control-label col-md-3 col-sm-3 col-xs-12">
+					<label for="title" class="control-label col-md-2 col-sm-3 col-xs-12">
 						Published
 					</label>
 					<div class="col-md-6 col-sm-6 col-xs-12">
@@ -92,7 +105,7 @@ $image = array(
 					</div>
 				</div>
 				<div class="form-group">
-					<label for="title" class="control-label col-md-3 col-sm-3 col-xs-12">
+					<label for="title" class="control-label col-md-2 col-sm-3 col-xs-12">
 						Description
 					</label>
 					<div class="col-md-6 col-sm-6 col-xs-12">
@@ -101,13 +114,13 @@ $image = array(
 					</div>
 				</div>
 				<div class="form-group">
-					<label for="title" class="control-label col-md-3 col-sm-3 col-xs-12">
+					<label for="title" class="control-label col-md-2 col-sm-3 col-xs-12">
 						Image
 					</label>
 					<div class="col-md-6 col-sm-6 col-xs-12">
 						<?php if ($category["image"]) { ?>
 						<div class="image_preview">
-                            <a class="image_del" href="#" data-toggle="modal" data-target="#delPhotoModal">
+                            <a class="image_del" href="javascript:void(0)" data-toggle="modal" data-target="#delPhotoModal">
                                 <img src="<?php echo base_url()."images/blog/categories/".$category["id"]."_200.".$category["image"]; ?>" alt="<?php echo $category["name"]; ?>">
                                 <i class="fa fa-close"></i>
                             </a>
