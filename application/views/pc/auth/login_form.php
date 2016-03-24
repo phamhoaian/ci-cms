@@ -1,158 +1,82 @@
 <?php
-$attributes = array('class' => 'form-horizontal');
-
 $username = array(
 	'name'	=> 'username',
 	'id'	=> 'username',
-	//'size'	=> 30,
+	'size'	=> 30,
 	'value' => set_value('username'),
-	'class' => 'form-control'
+    'placeholder' => "Username"
 );
 
 $password = array(
 	'name'	=> 'password',
 	'id'	=> 'password',
-	//'size'	=> 30,
-	'class' => 'form-control'
+	'size'	=> 30,
+    'placeholder' => "Password"
 );
 
 $remember = array(
 	'name'	=> 'remember',
 	'id'	=> 'remember',
 	'value'	=> 1,
-	'checked'	=> TRUE,
+	'checked'	=> set_value('remember'),
 	'style' => 'margin:0;padding:0'
 );
 
 $confirmation_code = array(
 	'name'	=> 'captcha',
 	'id'	=> 'captcha',
-	//'maxlength'	=> 8
-	'class' => 'form-control'
+	'maxlength'	=> 8
 );
-
 ?>
-
-
-
-
-<!--contentBlock-->
-	<div id="otherBlock" class="clearF">
-		<div class="inner">
-	
-	<h2 class="heading_life">ログインフォーム<span></span></h2>
-
-
-<div  style="width:95%; max-width:700px; margin:30px auto; padding:10px; border:1px solid #CCC; border-radius:10px; ">
-	<h3 style="margin-top:0px;"><?=$message?></h3>
-
-<?php echo form_open($this->uri->uri_string(), $attributes)?>
-	<?php echo $this->dx_auth->get_auth_error(); ?>
-
-
-  <div class="form-group">
-		<label class="col-sm-2 control-label" for="username">メールアドレス</label>
-    <div class="col-sm-7">
-			<?php echo form_error($username['name']); ?>
-			<?php echo form_input($username);?>
-		</div>
-	</div>
-
-
-	 <div class="form-group">
-		<label class="col-sm-2 control-label" for="password">パスワード</label>
-    <div class="col-sm-7">
-			<?php echo form_error($password['name']); ?>
-			<?php echo form_password($password);?>
-			
-			</div>
-	</div>
-
-
-
-	
-	
-<?php if ($show_captcha): ?>
-
-	<div class="form-group">
-		<label class="col-sm-2 control-label" for="password">画像に描かれている文字を入力してください</label>
-		<div class="col-sm-7">
-			<?php echo $this->dx_auth->get_captcha_image(); ?>
-			<?php echo form_input($confirmation_code);?>
-			<?php echo form_error($confirmation_code['name']); ?>
-			<p class="help-block">（数字のゼロは入っていません）</p>
-		</div>
-	</div>
-
-	
-	<div class="form-group">
-		<label class="control-label" for="remember"></label>
-		<div class="col-sm-7">
-			<?php echo form_checkbox($remember);?> <?php echo form_label('次回から自動的にログイン', $remember['id']);?> 
-			<p class="help-block"></p>
-		</div>
-	</div>
-
-	
-
-	
-<?php endif; ?>
-
-
-<div class="form-actions" align="center">
-<?php echo form_submit('regist','　　ログイン　　','data-loading-text="処理中…" class="btn btn-success"');?>　
+<div id="login">
+    <div class="login-logo">
+        <img src="<?php echo base_url(); ?>common/img/logo-big-shop.png" alt="<?php echo SITE_NAME; ?>" />
+    </div>
+    <div class="login-body">
+        <div class="login-title">
+            <strong>Welcome</strong>, Please login
+        </div>
+        <?php echo form_open($this->uri->uri_string())?>
+            <?php echo $this->dx_auth->get_auth_error(); ?>
+            <div class="form-group">
+                <?php echo form_input($username)?>
+                <?php echo form_error($username['name']); ?>
+            </div>
+            <div class="form-group">
+                <?php echo form_password($password)?>
+                <?php echo form_error($password['name']); ?>
+            </div>
+            <div class="form-group">
+                <?php if ($show_captcha): ?>
+                <dt>Enter the code exactly as it appears. There is no zero.</dt>
+                <dd><?php echo $this->dx_auth->get_captcha_image(); ?></dd>
+                <dt><?php echo form_label('Confirmation Code', $confirmation_code['id']);?></dt>
+                <dd>
+                    <?php echo form_input($confirmation_code);?>
+                    <?php echo form_error($confirmation_code['name']); ?>
+                </dd>
+                <?php endif; ?>
+            </div>
+            <div class="form-group checkbox">
+                <label>
+                    <?php echo form_checkbox($remember);?>
+                    Remember me
+                </label>
+            </div>
+            <div class="form-group">
+                <?php echo form_submit('login','Login', 'data-loading-text="Processing..."');?>
+            </div>
+            <hr>
+            <div class="login-footer">
+                <i class="fa fa-arrow-left"></i>
+                <?php echo anchor($this->dx_auth->forgot_password_uri, 'Forgot password');?>
+            </div>
+        <?php echo form_close()?>
+    </div>
 </div>
-
-	
-	
-	
-	<hr>
-	
-	<div style="text-align:center;">
-			<?php echo anchor($this->dx_auth->forgot_password_uri, 'パスワードを忘れた');?> 
-	</div>
-	
-	
-	
-<?php
-	if ($this->dx_auth->allow_registration) {
-?>
-	<hr>
-<div style="text-align:center;">
-<a href="<?php echo site_url($this->dx_auth->register_uri); ?>"><button class="btn btn-default btn-xs"><i class="icon-user icon-white"></i>新規登録</button></a>
-</div>
-<?php
-	};
-?>
-	
-	
 <script type="text/javascript"> 
-  $('.btn-success').on('click', function () {
-    $(this).button('loading')
-  })
-</script> 
-
-<br />
-
-<?php echo form_close()?>
-</div>
-	</div>
-<!--//contentWrap-->
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    $('input[type=submit]').on('click', function () {
+        $(this).attr('value', 'Processing...');
+        $(this).addClass('disabled');
+    })
+</script>

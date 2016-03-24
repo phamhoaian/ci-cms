@@ -3,6 +3,9 @@
 class Cms extends MY_Controller {
     
     public function __construct() {
+        $this->set_force_ssl("ON");
+        $this->set_auth(TRUE);
+        
         parent::__construct();
         
         // connect to database

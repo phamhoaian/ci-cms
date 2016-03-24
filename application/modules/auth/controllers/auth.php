@@ -9,6 +9,7 @@ class Auth extends MY_Controller
 
 	public function __construct()
 	{
+        $this->set_force_ssl("ON");
         //$this->set_auth(TRUE);
         //$this->set_only_mobile(TRUE);
         //$this->set_only_pc(TRUE);
@@ -33,11 +34,6 @@ class Auth extends MY_Controller
 		$this->load->helper('form');
 		
 		$this->load->model('myauth_model');
-		
-		if(! $this->is_mobile)
-		{
-			$this->set_js("bootstrap-button.js");
-		}
 		
 	}
 	
@@ -87,7 +83,7 @@ class Auth extends MY_Controller
 		$result = $this->dx_auth->is_username_available($username);
 		if ( ! $result)
 		{
-			$this->form_validation->set_message('username_check', 'このユーザー名はすでに使われています。別のユーザー名を入力してください');
+			$this->form_validation->set_message('username_check', 'Username already exist. Please choose another username.');
 		}
 				
 		return $result;
@@ -98,7 +94,7 @@ class Auth extends MY_Controller
 		$result = $this->dx_auth->is_email_available($email);
 		if ( ! $result)
 		{
-			$this->form_validation->set_message('email_check', 'このメールアドレスは既に他のユーザーが使用しています。別のメールアドレスを選択してください');
+			$this->form_validation->set_message('email_check', 'Email is already used by another user. Please choose another email address.');
 		}
 				
 		return $result;
@@ -113,12 +109,12 @@ class Auth extends MY_Controller
 		if ($this->dx_auth->is_captcha_expired())
 		{
 			// Will replace this error msg with $lang
-			$this->form_validation->set_message('captcha_check', '確認コードが有効期限切れです。 再試行してください。');			
+			$this->form_validation->set_message('captcha_check', 'Your confirmation code has expired. Please try again.');			
 			$result = FALSE;
 		}
 		elseif ( ! $this->dx_auth->is_captcha_match($code))
 		{
-			$this->form_validation->set_message('captcha_check', '入力された文字が違っています。再度入力してください。');			
+			$this->form_validation->set_message('captcha_check', 'Your confirmation code does not match the one in the image. Try again.');			
 			$result = FALSE;
 		}
 
@@ -130,7 +126,7 @@ class Auth extends MY_Controller
 		$result = $this->dx_auth->is_recaptcha_match();		
 		if ( ! $result)
 		{
-			$this->form_validation->set_message('recaptcha_check', '入力された文字が違っています。再度入力してください。');
+			$this->form_validation->set_message('recaptcha_check', 'Your confirmation code does not match the one in the image. Try again.');
 		}
 		
 		return $result;
@@ -148,15 +144,15 @@ class Auth extends MY_Controller
 			$val = $this->form_validation;
 			
 			// Set form validation rules
-			$val->set_error_delimiters('<div class="error"><strong><font color="#FF0000">*', '</font></strong></div>');
-			$val->set_rules('username', 'メールアドレス', 'trim|valid_email|required|xss_clean');
-			$val->set_rules('password', 'パスワード', 'trim|required|xss_clean');
+			$val->set_error_delimiters('<div class="error"><strong>* ', '</strong></div>');
+			$val->set_rules('username', 'Username', 'trim|valid_email|required|xss_clean');
+			$val->set_rules('password', 'Password', 'trim|required|xss_clean');
 			$val->set_rules('remember', 'Remember me', 'integer');
 
 			// Set captcha rules if login attempts exceed max attempts in config
 			if ($this->dx_auth->is_max_login_attempts_exceeded())
 			{
-				$val->set_rules('captcha', '画像文字', 'trim|required|xss_clean|callback_captcha_check');
+				$val->set_rules('captcha', 'Confirmation Code', 'trim|required|xss_clean|callback_captcha_check');
 			}
 				
 			if ($val->run() AND $this->dx_auth->login($val->set_value('username'), $val->set_value('password'), $val->set_value('remember')))
@@ -286,7 +282,7 @@ class Auth extends MY_Controller
 					}
 					
 					
-					$this->load_view($this->dx_auth->login_view,$this->data,TRUE);
+					$this->load_view($this->dx_auth->login_view,$this->data,TRUE,"auth/layout");
 				}
 			}
 		}
@@ -313,7 +309,7 @@ class Auth extends MY_Controller
 		
 		
 		
-		$this->data['auth_message'] = 'ログアウトが完了しました';		
+		$this->data['auth_message'] = 'You have been logged out.';		
 		$this->load_view($this->dx_auth->logout_view,$this->data,TRUE);
 	}
 	
@@ -326,15 +322,15 @@ class Auth extends MY_Controller
 			
 			// Set form validation rules		
 			$val->set_error_delimiters('<div class="error"><strong><font color="#FF0000">*', '</font></strong></div>');	
-			$val->set_rules('username', 'ユーザー名', 'trim|required|xss_clean|min_length['.$this->min_username.']|max_length['.$this->max_username.']|callback_username_check');
-			$val->set_rules('password', 'パスワード', 'trim|required|xss_clean|min_length['.$this->min_password.']|max_length['.$this->max_password.']|matches[confirm_password]');
-			$val->set_rules('confirm_password', 'パスワード(再入力)', 'trim|required|xss_clean');
-			$val->set_rules('email', 'メールアドレス', 'trim|required|xss_clean|valid_email|callback_email_check');
+			$val->set_rules('username', 'Username', 'trim|required|xss_clean|min_length['.$this->min_username.']|max_length['.$this->max_username.']|callback_username_check');
+			$val->set_rules('password', 'Password', 'trim|required|xss_clean|min_length['.$this->min_password.']|max_length['.$this->max_password.']|matches[confirm_password]');
+			$val->set_rules('confirm_password', 'Confirm Password', 'trim|required|xss_clean');
+			$val->set_rules('email', 'Email', 'trim|required|xss_clean|valid_email|callback_email_check');
 			
 			
 			if ($this->dx_auth->captcha_registration)
 			{
-				$val->set_rules('captcha', '画像文字の入力', 'trim|xss_clean|required|callback_captcha_check');
+				$val->set_rules('captcha', 'Confirmation Code', 'trim|xss_clean|required|callback_captcha_check');
 			}
 			
 			
@@ -346,15 +342,12 @@ class Auth extends MY_Controller
 				// Set success message accordingly
 				if ($this->dx_auth->email_activation)
 				{
-					$this->data['auth_message'] = '仮登録が完了しました。正式登録するためのメールを送りました。';
+					$this->data['auth_message'] = 'You have successfully registered. Check your email address to activate your account.';
 				}
 				else
 				{					
-					$this->data['auth_message'] = '登録が完了しました。'.anchor(site_url($this->dx_auth->login_uri), 'Login');
-				}
-				
-				// ここでカスタマイズ情報を格納
-				
+					$this->data['auth_message'] = 'You have successfully registered. '.anchor(site_url($this->dx_auth->login_uri), 'Login');
+				}				
 				
 				// Load registration success page
 				$this->load_view($this->dx_auth->register_success_view, $this->data,TRUE);
@@ -373,12 +366,12 @@ class Auth extends MY_Controller
 		}
 		elseif ( ! $this->dx_auth->allow_registration)
 		{
-			$this->data['auth_message'] = '現在登録を受け付けしていません。';
+			$this->data['auth_message'] = 'Registration has been disabled.';
 			$this->load_view($this->dx_auth->register_disabled_view, $this->data,TRUE);
 		}
 		else
 		{
-			$this->data['auth_message'] = '登録する前に、ログアウトをしてください。';
+			$this->data['auth_message'] = 'You have to logout first, before registering.';
 			$this->load_view($this->dx_auth->logged_in_view, $this->data);
 		}
 	}
