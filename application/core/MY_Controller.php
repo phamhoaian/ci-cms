@@ -1230,10 +1230,97 @@ class MY_Controller extends CI_Controller {
 		}
 	}
 	
+	protected function _array_flatten($array, $depth = 1, $type = "") { 
+        if (!is_array($array)) {
+            return FALSE; 
+        } 
+        $result = array(); 
+        foreach ($array as $key => $value) {
+            $tree_space = '';
+            if ($depth > 1) {
+                if (isset($type) && $type == "list" ) {
+                    for ($i = 1; $i < $depth; $i++) {
+                        $tree_space .= ".&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+                    }
+                    $tree_space .= '<sup>|_</sup>';
+                }
+                if (isset($type) && $type == "form" ) {
+                    for ($i = 1; $i < $depth; $i++) {
+                        $tree_space .= "-&nbsp;-&nbsp;-&nbsp;";
+                    }
+                }
+            }
+            $value["name"] = $tree_space.'&nbsp;'.$value["name"];
+            array_push($result, $value);
+            if (!empty($value["children"])) {
+                $result = array_merge($result, $this->_array_flatten($value["children"], $depth + 1, $type));
+            }
+        } 
+        return $result; 
+    } 
+    
+    protected function _prepareList($items = array(), $pid = 0)
+    {
+        $output = array();
+
+        # loop through the items
+        foreach ($items as $item) {
+
+            # Whether the parent_id of the item matches the current $pid
+            if ((int) $item['parent'] == $pid) {
+
+                # Call the function recursively, use the item's id as the parent's id
+                # The function returns the list of children or an empty array()
+                if ($children = $this->_prepareList($items, $item['id'])) {
+
+                    # Store all children of the current item
+                    $item['children'] = $children;
+                }
+
+                # Fill the output
+                $output[] = $item;
+            }
+        }
+
+        return $output;
+    }
 	
+	protected function _getIntroText($str = '', $id = '') {
+        $output = '';
+        
+        //find position of tag identifier
+        if (($pos_srch = strpos($str, $id)) !== false) {
+            //get text before identifier
+            $intro_text = substr($str, 0, $pos_srch);
+            //get position of start tag
+            $pos_start_tag = strrpos($intro_text, 'hr');
+            //extract text up to but not including start tag
+            $intro_text = substr($intro_text, 0, $pos_start_tag - 4);
+            //set output by introtext
+            $output .= $intro_text;
+        } else {
+            $output .= $str;
+        }
+        
+        return $output;
+    }
 	
-	
-	
-	
+	protected function _getFullText($str = '', $id = '') {
+        $output = '';
+        
+        //find position of tag identifier
+        if (($pos_srch = strpos($str, $id)) !== false) {
+            //get text after identifier
+            $fulltext = substr($str, $pos_srch);
+            //get position of end tag
+            $pos_end_tag = strpos($fulltext, '/');
+            //extract text up to but not including start tag
+            $fulltext = substr($fulltext, $pos_end_tag + 5);
+            //set output by introtext
+            $output .= $fulltext;
+        }
+        
+        return $output;
+    }
 	
 }

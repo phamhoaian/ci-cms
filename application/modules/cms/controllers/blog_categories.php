@@ -119,6 +119,7 @@ class Blog_categories extends MY_Controller {
         $this->set_css("select2.min.css");
         $this->set_js("switchery.min.js");
         $this->set_js("select2.full.js");
+        $this->set_css("dropzone.css");
 
 		// blog category id
 		$this->data["category_id"] = $this->security_clean($this->uri->segment(4, 0));
@@ -592,13 +593,13 @@ class Blog_categories extends MY_Controller {
         $this->upload->initialize($config);
 
         if (!$this->upload->do_upload("$filename")) {
-            $this->session->set_flashdata($this->upload->display_errors());
+            $this->session->set_flashdata("error", $this->upload->display_errors());
             return FALSE;
         } else {
             $data = $this->upload->data();
             
-            $this->ciframe_image_lib->convert_image_uploaded($data, 450, $file_dir, $this->data["category_id"]."_450", FALSE);
-            $this->ciframe_image_lib->convert_image_uploaded($data, 200, $file_dir, $this->data["category_id"]."_200",  TRUE);
+            $this->ciframe_image_lib->convert_image_uploaded($data, 300, $file_dir, $this->data["category_id"]."_300", FALSE);
+            $this->ciframe_image_lib->convert_image_uploaded($data, 100, $file_dir, $this->data["category_id"]."_100",  TRUE);
 
             return substr($data["file_ext"], strpos($data["file_ext"], ".") + 1);
         }
@@ -619,12 +620,12 @@ class Blog_categories extends MY_Controller {
         }
         
         $file_dir = FCPATH.$this->out_img_dir."/";
-        $file200 = $file_dir.$id."_200.".$category["image"];
-		$file450 = $file_dir.$id."_450.".$category["image"];
+        $file100 = $file_dir.$id."_100.".$category["image"];
+		$file300 = $file_dir.$id."_300.".$category["image"];
         
-        if (file_exists($file200) && file_exists($file450)) {
-            unlink($file200);
-            unlink($file450);
+        if (file_exists($file100) && file_exists($file300)) {
+            unlink($file100);
+            unlink($file300);
         }
         $upd_data = array(
             "image" => ''
@@ -633,60 +634,5 @@ class Blog_categories extends MY_Controller {
         
         $this->session->set_flashdata("message", "Delete category image completely!");
         redirect("cms/blog_categories/edit/".$id);
-    }
-    
-    private function _array_flatten($array, $depth = 1, $type = "") { 
-        if (!is_array($array)) {
-            return FALSE; 
-        } 
-        $result = array(); 
-        foreach ($array as $key => $value) {
-            $tree_space = '';
-            if ($depth > 1) {
-                if (isset($type) && $type == "list" ) {
-                    for ($i = 1; $i < $depth; $i++) {
-                        $tree_space .= ".&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-                    }
-                    $tree_space .= '<sup>|_</sup>';
-                }
-                if (isset($type) && $type == "form" ) {
-                    for ($i = 1; $i < $depth; $i++) {
-                        $tree_space .= "-&nbsp;-&nbsp;-&nbsp;";
-                    }
-                }
-            }
-            $value["name"] = $tree_space.'&nbsp;'.$value["name"];
-            array_push($result, $value);
-            if (!empty($value["children"])) {
-                $result = array_merge($result, $this->_array_flatten($value["children"], $depth + 1, $type));
-            }
-        } 
-        return $result; 
-    } 
-    
-    private function _prepareList($items = array(), $pid = 0)
-    {
-        $output = array();
-
-        # loop through the items
-        foreach ($items as $item) {
-
-            # Whether the parent_id of the item matches the current $pid
-            if ((int) $item['parent'] == $pid) {
-
-                # Call the function recursively, use the item's id as the parent's id
-                # The function returns the list of children or an empty array()
-                if ($children = $this->_prepareList($items, $item['id'])) {
-
-                    # Store all children of the current item
-                    $item['children'] = $children;
-                }
-
-                # Fill the output
-                $output[] = $item;
-            }
-        }
-
-        return $output;
     }
 }

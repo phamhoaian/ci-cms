@@ -1,7 +1,7 @@
 <?php
-$attributes = array("class" => "form-horizontal");
+$attributes = array("class" => "form-horizontal", "id" => "categoryForm", "name" => "categoryForm");
 $hidden = array("id" => $category_id, "image_from_category" => $image_from_category);
-$js_back = "class='btn btn-default' onClick=\"self.location.href='". site_url("cms/blog_categories") ."'\"'";
+$js_back = "onClick=\"self.location.href='". site_url("cms/blog_categories") ."'\"'";
 
 $title = array(
 	"name" => "title",
@@ -35,134 +35,158 @@ $description = array(
 	"id" => "description",
 	"class" => "form-control",
 	"value" => set_value("description", $category["description"]),
-	"rows" => 10,
+	"rows" => 7,
 	"style" => "resize: vertical;"
 );
 $image = array(
 	"name" => "image",
 	"id" => "image",
-	"class" => "",
+	"accept" => "image/*",
 	"onchange" => "openFile(event)"
 );
 ?>
+<div class="page-title">
+    <div class="row">
+        <div class="col-md-12 toolbox text-right">
+            <button onclick="document.categoryForm.submit();" class="btn btn-app">
+                <i class="fa fa-check"></i>
+                Save
+            </button>
+            <button <?php echo $js_back; ?> class="btn btn-app">
+                <i class="fa fa-close"></i>
+                Cancel
+            </button>
+        </div>
+    </div>
+</div>
+<!-- /page-title -->
 <div class="row">
-	<div class="col-md-12 col-sm-12 col-xs-12">
+    <?php echo form_open_multipart($this->uri->uri_string(), $attributes, $hidden); ?>
+	<div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
 		<div class="x_panel">
 			<div class="x_title">
-				<h2><?php echo $page_title; ?></h2>
+				<h2>
+                    <i class="fa fa-pencil"></i>
+                    <?php echo $page_title; ?>
+                </h2>
+                <ul class="nav navbar-right panel_toolbox">
+                    <li>
+                        <a href="javascript:void(0)" class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                    </li>
+                </ul>
+                <div class="clearfix"></div>
 			</div>
-            <?php if ($this->session->flashdata('error')) { ?>
-            <div class="alert alert-danger alert-dismissible fade in">
-                <button type="button" class="close" data-dismiss="alert">×</button>
-                <h4 class="alert-heading">Error</h4>
-                <p class="alert-message"><?php echo $this->session->flashdata('error'); ?></p>
-			</div>
-            <?php } ?>
-            <?php if ($this->session->flashdata('message')) { ?>
-            <div class="alert alert-success alert-dismissible fade in">
-                <button type="button" class="close" data-dismiss="alert">×</button>
-                <h4 class="alert-heading">Message</h4>
-                <p class="alert-message"><?php echo $this->session->flashdata('message'); ?></p>
-			</div>
-            <?php } ?>
+            <?php $this->load->view('pc/message'); ?>
 			<div class="x_content">
-				<?php echo form_open_multipart($this->uri->uri_string(), $attributes, $hidden); ?>
 				<div class="form-group">
-					<label for="title" class="control-label col-md-2 col-sm-3 col-xs-12">
+					<label for="title" class="control-label col-md-3 col-sm-3 col-xs-12">
 						Title
 						<span class="required">*</span>
 					</label>
-					<div class="col-md-6 col-sm-6 col-xs-12">
+					<div class="col-lg-7 col-md-8 col-sm-7 col-xs-12">
 						<?php echo form_input($title); ?>
 						<?php echo form_error($title["name"]); ?>
 					</div>
 				</div>
 				<div class="form-group">
-					<label for="title" class="control-label col-md-2 col-sm-3 col-xs-12">
+					<label for="title" class="control-label col-md-3 col-sm-3 col-xs-12">
 						Title alias (URL)
 					</label>
-					<div class="col-md-6 col-sm-6 col-xs-12">
+					<div class="col-lg-7 col-md-8 col-sm-7 col-xs-12">
 						<?php echo form_input($alias); ?>
 						<?php echo form_error($alias["name"]); ?>
 					</div>
 				</div>
 				<div class="form-group">
-					<label for="title" class="control-label col-md-2 col-sm-3 col-xs-12">
+					<label for="title" class="control-label col-md-3 col-sm-3 col-xs-12">
 						Parent category
 					</label>
-					<div class="col-md-6 col-sm-6 col-xs-12">
+					<div class="col-lg-7 col-md-8 col-sm-7 col-xs-12">
 						<?php echo form_dropdown("parent", $parent, $parent_selected, "id ='parent' class='form-control'"); ?>
 						<?php echo form_error("parent"); ?>
 					</div>
 				</div>
 				<div class="form-group">
-					<label for="title" class="control-label col-md-2 col-sm-3 col-xs-12">
+					<label for="title" class="control-label col-md-3 col-sm-3 col-xs-12">
 						Published
 					</label>
-					<div class="col-md-6 col-sm-6 col-xs-12">
+					<div class="col-lg-7 col-md-8 col-sm-7 col-xs-12">
 						<?php echo form_checkbox($published); ?>
 						<?php echo form_error($published["name"]); ?>
 					</div>
 				</div>
 				<div class="form-group">
-					<label for="title" class="control-label col-md-2 col-sm-3 col-xs-12">
+					<label for="title" class="control-label col-md-3 col-sm-3 col-xs-12">
 						Description
 					</label>
-					<div class="col-md-6 col-sm-6 col-xs-12">
+					<div class="col-lg-7 col-md-8 col-sm-7 col-xs-12">
 						<?php echo form_textarea($description); ?>
 						<?php echo form_error($description["name"]); ?>
 					</div>
 				</div>
-				<div class="form-group">
-					<label for="title" class="control-label col-md-2 col-sm-3 col-xs-12">
-						Image
-					</label>
-					<div class="col-md-6 col-sm-6 col-xs-12">
-						<?php if ($category["image"]) { ?>
-						<div class="image_preview">
-                            <a class="image_del" href="javascript:void(0)" data-toggle="modal" data-target="#delPhotoModal">
-                                <img src="<?php echo base_url()."images/blog/categories/".$category["id"]."_200.".$category["image"]; ?>" alt="<?php echo $category["name"]; ?>">
-                                <i class="fa fa-close"></i>
-                            </a>
-						</div>
-                        <div class="modal animated fadeInDown type-success" id="delPhotoModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                        <h4 class="modal-title" id="myModalLabel">Are you sure want to delete category image ?</h4>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <a href="<?php echo site_url("cms/blog_categories/photo_del/".$category["id"]); ?>" class="btn btn-primary">Delete</a>
-                                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-						<?php } else { ?>
-						<?php echo form_upload($image); ?>
-						<?php echo form_error($image["name"]); ?>
-						<div class="image_preview">
-							<img id="output">
-						</div>
-						<?php } ?>
-					</div>
-				</div>
-				<hr>
-				<div class="form-group">
-					<div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-						<?php echo form_submit('submit','Submit','data-loading-text="Waiting…" class="btn btn-success"');?>　
-						<?php echo form_reset('reset', 'Reset','class="btn btn-primary"');?>　　
-						<?php echo form_button('back', 'Cancel', $js_back);?>
-					</div>
-				</div>
-				<?php echo form_close(); ?>
 			</div>
 		</div>
 	</div>
+    <!-- /left-content -->
+    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+        <div class="x_panel">
+			<div class="x_title">
+				<h2>
+                    <i class="fa fa-image"></i>
+                    Image
+                </h2>
+                <ul class="nav navbar-right panel_toolbox">
+                    <li>
+                        <a href="javascript:void(0)" class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                    </li>
+                </ul>
+                <div class="clearfix"></div>
+			</div>
+            <div class="x_content">
+                <?php if ($category["image"]) { ?>
+                <div class="dropzone dropzone-mini dz-clickable dz-started">
+                    <div class="dz-preview dz-success">
+                        <div class="dz-details">
+                            <div class="dz-filename"><?php echo $category["name"]; ?></div>
+                            <img id="dz-image-preview" src="<?php echo base_url()."images/blog/categories/".$category["id"]."_300.".$category["image"]; ?>"/>
+                        </div>
+                        <div class="dz-success-mark"></div>
+                        <a class="dz-remove" href="<?php echo site_url("cms/blog_categories/photo_del/".$category["id"]); ?>" data-dz-remove="">Remove file</a>
+                    </div>
+                </div>
+                <?php } else { ?>
+                <div class="dropzone dropzone-mini dz-clickable">
+                    <div class="dz-default dz-message">
+                        <?php echo form_upload($image); ?>
+                        <?php echo form_error($image["name"]); ?>
+                    </div>
+                    <div class="dz-preview">
+                        <div class="dz-details">
+                            <div class="dz-filename"></div>
+                            <img id="dz-image-preview" src=""/>
+                        </div>
+                        <div class="dz-success-mark"></div>
+                        <a class="dz-remove" href="javascript:void(0)" data-dz-remove="">Remove file</a>
+                    </div>
+                </div>
+                <?php } ?>
+            </div>
+        </div>
+    </div>
+    <!-- /image -->
+    <?php echo form_close(); ?>
 </div>
 <!-- /x_panel -->
 <script type="text/javascript">
+    $(function () {
+        $("#parent").select2();
+        $('.dz-remove').click(restartFiles);
+    });
+    
 	if ($(".js-switch")[0]) {
 	    var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
 	    elems.forEach(function (html) {
@@ -172,17 +196,25 @@ $image = array(
 	    });
 	}
 
-	var openFile = function(event) {
-		var input = event.target;
-
-		var reader = new FileReader();
-		reader.onload = function(){
-			var dataURL = reader.result;
-			var output = document.getElementById('output');
-			output.src = dataURL;
-		};
-		reader.readAsDataURL(input.files[0]);
-	};
+	var restartFiles = function() {
+        $('.dropzone').removeClass('dz-started');
+        $('.dz-preview').removeClass('dz-success');
+        $('#image').replaceWith($("#image").clone());
+    };
     
-    $("#parent").select2();
+    var openFile = function(event) {
+        var input = event.target;
+        var file = event.target.files[0];
+        var reader = new FileReader();
+        reader.fileName = file.name;
+        reader.onload = function(){
+            var dataURL = reader.result;
+            $('.dropzone').addClass('dz-started');
+            $('.dz-preview').addClass('dz-success');
+            $('.dz-filename').html("<span>" + this.fileName + "</span>");
+            var output = document.getElementById('dz-image-preview');
+            output.src = dataURL;
+        };
+        reader.readAsDataURL(input.files[0]);
+    };
 </script>

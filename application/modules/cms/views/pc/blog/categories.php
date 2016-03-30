@@ -69,22 +69,20 @@ foreach ($list_limit as $val) {
     <div class="col-md-12 col-sm-12 col-xs-12">
         <div class="x_panel">
             <div class="x_title">
-                <h2>List blog categories</h2>
+                <h2>
+                    <i class="fa fa-list-ul"></i>
+                    List blog categories
+                </h2>
+                <ul class="nav navbar-right panel_toolbox">
+                    <li>
+                        <a href="javascript:void(0)" class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                    </li>
+                </ul>
+                <div class="clearfix"></div>
             </div>
-            <?php if ($this->session->flashdata('error')) { ?>
-            <div class="alert alert-danger alert-dismissible fade in">
-                <button type="button" class="close" data-dismiss="alert">×</button>
-                <h4 class="alert-heading">Error</h4>
-                <p class="alert-message"><?php echo $this->session->flashdata('error'); ?></p>
-			</div>
-            <?php } ?>
-            <?php if ($this->session->flashdata('message')) { ?>
-            <div class="alert alert-success alert-dismissible fade in">
-                <button type="button" class="close" data-dismiss="alert">×</button>
-                <h4 class="alert-heading">Message</h4>
-                <p class="alert-message"><?php echo $this->session->flashdata('message'); ?></p>
-			</div>
-            <?php } ?>
+            <?php $this->load->view('pc/message'); ?>
             <div class="x_content">
                 <?php echo form_open(site_url("cms/blog_categories/search/".$status), $attributes, $hidden); ?>
                 <div class="row MB10">
@@ -189,10 +187,10 @@ foreach ($list_limit as $val) {
                                         <td class="text-center image hidden-xs">
                                             <?php 
                                             $file_dir = FCPATH.$this->out_img_dir."/";
-                                            $file200 = $file_dir.$category["id"]."_200.".$category["image"];
-                                            if (file_exists($file200) && $category["image"]) {
+                                            $file100 = $file_dir.$category["id"]."_100.".$category["image"];
+                                            if (file_exists($file100) && $category["image"]) {
                                             ?>
-                                            <img src="<?php echo base_url(); ?>images/blog/categories/<?php echo $category["id"]; ?>_200.<?php echo $category["image"]; ?>" alt="<?php echo $category["name"]; ?>">
+                                            <img src="<?php echo base_url(); ?>images/blog/categories/<?php echo $category["id"]; ?>_100.<?php echo $category["image"]; ?>" alt="<?php echo $category["name"]; ?>">
                                             <?php } else { ?>
                                             <i class="fa fa-image"></i>
                                             <?php } ?>
