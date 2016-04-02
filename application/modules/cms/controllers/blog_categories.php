@@ -51,7 +51,7 @@ class Blog_categories extends MY_Controller {
         // limit
         $this->data["limit"] = $this->input->post('limit');
         if ($this->data["limit"] == "") {
-            $this->data["limit"] = 10;
+            $this->data["limit"] = $this->limit;
         }
         if ($this->data["limit"] == 0) {
             $this->data["limit"] = NULL;

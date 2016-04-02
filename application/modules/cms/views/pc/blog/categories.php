@@ -87,13 +87,11 @@ foreach ($list_limit as $val) {
                 <?php echo form_open(site_url("cms/blog_categories/search/".$status), $attributes, $hidden); ?>
                 <div class="row MB10">
                     <div class="col-md-6 col-sm-6 col-xs-12">
-                        <label>
-                            Status:
-                            <div class="btn-group">
-                                <a href="<?php echo site_url("cms/blog_categories/search/active"); ?>" class="btn btn-sm btn-success <?php if($status != "trash") { echo "active"; } ?>">Active</a>
-                                <a href="<?php echo site_url("cms/blog_categories/search/trash"); ?>" class="btn btn-sm btn-danger <?php if($status == "trash") { echo "active"; } ?>">Trash</a>
-                            </div>
-                        </label>
+                        <label>Status:</label>
+                        <div class="btn-group">
+                            <a href="<?php echo site_url("cms/blog_categories/search/active"); ?>" class="btn btn-sm btn-success <?php if($status != "trash") { echo "active"; } ?>">Active</a>
+                            <a href="<?php echo site_url("cms/blog_categories/search/trash"); ?>" class="btn btn-sm btn-danger <?php if($status == "trash") { echo "active"; } ?>">Trash</a>
+                        </div>
                     </div>
                     <div class="col-md-6 col-sm-6 col-xs-12 text-right">
                         <div id="searchCategories" class="input-group input-group-sm">

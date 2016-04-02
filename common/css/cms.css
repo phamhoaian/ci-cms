@@ -391,15 +391,22 @@ table.jambo_table tbody tr td {
     vertical-align: middle;
 }
 table.jambo_table .published .fa,
-table.jambo_table .published .glyphicon{
+table.jambo_table .published .glyphicon,
+table.jambo_table .featured .fa,
+table.jambo_table .featured .glyphicon{
     margin: 0;
     width: 12px;
 }
-table.jambo_table .published .fa-check {
+table.jambo_table .published .fa-check,
+table.jambo_table .featured .fa-check {
     color: #378137;
 }
-table.jambo_table .published .fa-close {
+table.jambo_table .published .fa-close,
+table.jambo_table .featured .fa-close {
     color: #942a25;
+}
+table.jambo_table .featured .fa-star {
+    color: #FFA019;
 }
 table.jambo_table .image img{
     max-width: 30px;

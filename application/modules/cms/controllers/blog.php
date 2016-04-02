@@ -40,12 +40,39 @@ class Blog extends MY_Controller {
 	}
     
     public function search() {
+    	// load css and js
+    	$this->set_css("green.css");
+    	$this->set_js("icheck.min.js");
+    	
         // breadcrumbs
         $this->position['item'][2]['title'] = "Items";
         $this->data['position'] = $this->load->view("pc/parts/position", $this->position, TRUE);
 
         // active side menu
         $this->data["active_sub_menu"] = "blog_items";
+        
+        // limit
+        $this->data["limit"] = $this->input->post('limit');
+        if ($this->data["limit"] == "") {
+        	$this->data["limit"] = $this->limit;
+        }
+        if ($this->data["limit"] == 0) {
+        	$this->data["limit"] = NULL;
+        }
+        
+        // keyword
+        $key = $this->security_clean($this->uri->segment(5));
+        if ($this->input->post('search')) {
+        	$key = $this->security_clean($this->input->post('search'));
+        }
+        if ($key === "-") {
+        	$key = "";
+        }
+        $key = trim($key);
+        $like = key2like($key);
+        
+        // offset
+        $offset = (int) $this->uri->segment(6, 0);
         
         // status
         $this->data["status"] = $this->security_clean($this->uri->segment(4));
@@ -55,6 +82,29 @@ class Blog extends MY_Controller {
         if (!$this->data["status"]) {
             $this->data["status"] = "active";
         }
+        $where = array();
+        if ($this->data["status"] == "active") {
+        	$where["blog_items.delete_flag"] = 0;
+        } else {
+        	$where["blog_items.delete_flag"] = 1;
+        }
+        
+        // list items
+        $this->common_model->set_table("blog_items");
+        $this->db->select("blog_items.*, blog_categories.name as cat_name");
+        $this->db->join("blog_categories", "blog_items.cat_id = blog_categories.id", "inner");
+        $this->data["items"] = $this->common_model->like($where, array("title" => $like), "published_date DESC, created DESC", $this->data["limit"], $offset);
+        $this->data["count_items"] = $this->common_model->get_count($where, array("title" => $like));
+        
+        // generate pagination
+        $this->data["key"] = "-";
+        $this->data["key_disp"] = "";
+        if ($key) {
+        	$this->data["key"] = rawurlencode($key);
+        	$this->data["key_disp"] = $key;
+        }
+        $path = "cms/blog/search/".$this->data["status"]."/".$this->data["key"];
+        $this->data["pagination"] = $this->generate_pagination($path, $this->data["count_items"], $this->data["limit"], 6);
 
 		// load view
         $this->load_view("blog/items", $this->data);
@@ -195,6 +245,7 @@ class Blog extends MY_Controller {
             $message = "";
             $this->common_model->set_table("blog_items");
             if ($this->data["item_id"]) {
+                $upd_data["modified"] = date('Y-m-d H:i:s', time());
                 $this->common_model->update($upd_data, array("id" => $this->data["item_id"]));
                 $message = "Update item successfully!";
             } else {
@@ -219,6 +270,381 @@ class Blog extends MY_Controller {
         // load view
         $this->load_view("blog/item", $this->data);
 	}
+    
+    public function featured() {
+        // breadcrumbs
+        $this->position['item'][2]['title'] = "Items";
+        $this->position['item'][2]['url'] = site_url("cms/blog");
+        $this->position['item'][3]['title'] = "Featured";
+        $this->data['position'] = $this->load->view("pc/parts/position", $this->position, TRUE);
+
+        // group items id
+        $id = $this->input->post("id");
+        if ($id) {
+            $count = count($id);
+            $id = implode(",", $id);
+            $this->common_model->set_table("blog_items");
+            $this->data["item"] = $this->common_model->get_row(array("id IN({$id})" => NULL));
+            if (!$this->data["item"]) {
+                $this->session->set_flashdata("error", "The item not exist!");
+                redirect("cms/blog/search");
+            }
+
+            $upd_data = array(
+                "featured" => 1
+            );
+            $this->common_model->update($upd_data, array("id IN({$id})" => NULL));
+            
+            // flash message
+            $this->session->set_flashdata("message", "There are {$count} items changed!");
+        } else {
+            // blog item id
+            $this->data["item_id"] = (int) $this->security_clean($this->uri->segment(4, ""));
+            
+            if (!$this->data["item_id"] || !is_numeric($this->data["item_id"])) {
+                $this->session->set_flashdata("error", "Illegal operation has occurred!");
+                redirect("cms/blog/search");
+            }
+
+            $this->common_model->set_table("blog_items");
+            $this->data["item"] = $this->common_model->get_row(array("id" => $this->data["item_id"]));
+            if (!$this->data["item"]) {
+                $this->session->set_flashdata("error", "The item not exist!");
+                redirect("cms/blog/search");
+            }
+
+            $upd_data = array(
+                "featured" => 1
+            );
+            $this->common_model->update($upd_data, array('id' => $this->data["item_id"]));
+            
+            // flash message
+            $this->session->set_flashdata("message", "Item changed!");
+        }
+        $jump_url = site_url("cms/blog/search");
+        header("Location: $jump_url");
+    }
+    
+    public function unfeatured() {
+        // breadcrumbs
+        $this->position['item'][2]['title'] = "Item";
+        $this->position['item'][2]['url'] = site_url("cms/blog");
+        $this->position['item'][3]['title'] = "Unfeatured";
+        $this->data['position'] = $this->load->view("pc/parts/position", $this->position, TRUE);
+        
+        // group item id
+        $id = $this->input->post("id");
+        if ($id) {
+            $count = count($id);
+            $id = implode(",", $id);
+            $this->common_model->set_table("blog_items");
+            $this->data["item"] = $this->common_model->get_row(array("id IN({$id})" => NULL));
+            if (!$this->data["item"]) {
+                $this->session->set_flashdata("error", "The item not exist!");
+                redirect("cms/blog/search");
+            }
+
+            $upd_data = array(
+                "featured" => 0
+            );
+            $this->common_model->update($upd_data, array("id IN({$id})" => NULL));
+            
+            // flash message
+            $this->session->set_flashdata("message", "There are {$count} items changed!");
+        } else {
+            // blog item id
+            $this->data["item_id"] = (int) $this->security_clean($this->uri->segment(4, ""));
+
+            if (!$this->data["item_id"] || !is_numeric($this->data["item_id"])) {
+                $this->session->set_flashdata("error", "Illegal operation has occurred!");
+                redirect("cms/blog/search");
+            }
+
+            $this->common_model->set_table("blog_items");
+            $this->data["item"] = $this->common_model->get_row(array("id" => $this->data["item_id"]));
+            if (!$this->data["item"]) {
+                $this->session->set_flashdata("error", "The item not exist!");
+                redirect("cms/blog/search");
+            }
+
+            $upd_data = array(
+                "featured" => 0
+            );
+            $this->common_model->update($upd_data, array('id' => $this->data["item_id"]));
+            
+            // flash message
+            $this->session->set_flashdata("message", "Item changed!");
+        }
+        
+        $jump_url = site_url("cms/blog/search");
+        header("Location: $jump_url");
+    }
+    
+    public function publish() {
+        // breadcrumbs
+        $this->position['item'][2]['title'] = "Items";
+        $this->position['item'][2]['url'] = site_url("cms/blog");
+        $this->position['item'][3]['title'] = "Publish";
+        $this->data['position'] = $this->load->view("pc/parts/position", $this->position, TRUE);
+
+        // group item id
+        $id = $this->input->post("id");
+        if ($id) {
+            $count = count($id);
+            $id = implode(",", $id);
+            $this->common_model->set_table("blog_items");
+            $this->data["item"] = $this->common_model->get_row(array("id IN({$id})" => NULL));
+            if (!$this->data["item"]) {
+                $this->session->set_flashdata("error", "The item not exist!");
+                redirect("cms/blog/search");
+            }
+
+            $upd_data = array(
+                "published" => 1
+            );
+            $this->common_model->update($upd_data, array("id IN({$id})" => NULL));
+            
+            // flash message
+            $this->session->set_flashdata("message", "There are {$count} item published!");
+        } else {
+            // blog item id
+            $this->data["item_id"] = (int) $this->security_clean($this->uri->segment(4, ""));
+            
+            if (!$this->data["item_id"] || !is_numeric($this->data["item_id"])) {
+                $this->session->set_flashdata("error", "Illegal operation has occurred!");
+                redirect("cms/blog/search");
+            }
+
+            $this->common_model->set_table("blog_items");
+            $this->data["item"] = $this->common_model->get_row(array("id" => $this->data["item_id"]));
+            if (!$this->data["item"]) {
+                $this->session->set_flashdata("error", "The item not exist!");
+                redirect("cms/blog/search");
+            }
+
+            $upd_data = array(
+                "published" => 1
+            );
+            $this->common_model->update($upd_data, array('id' => $this->data["item_id"]));
+            
+            // flash message
+            $this->session->set_flashdata("message", "Item published!");
+        }
+        $jump_url = site_url("cms/blog/search");
+        header("Location: $jump_url");
+    }
+    
+    public function unpublish() {
+        // breadcrumbs
+        $this->position['item'][2]['title'] = "Items";
+        $this->position['item'][2]['url'] = site_url("cms/blog");
+        $this->position['item'][3]['title'] = "Unpublish";
+        $this->data['position'] = $this->load->view("pc/parts/position", $this->position, TRUE);
+        
+        // group item id
+        $id = $this->input->post("id");
+        if ($id) {
+            $count = count($id);
+            $id = implode(",", $id);
+            $this->common_model->set_table("blog_items");
+            $this->data["item"] = $this->common_model->get_row(array("id IN({$id})" => NULL));
+            if (!$this->data["item"]) {
+                $this->session->set_flashdata("error", "The item not exist!");
+                redirect("cms/blog/search");
+            }
+
+            $upd_data = array(
+                "published" => 0
+            );
+            $this->common_model->update($upd_data, array("id IN({$id})" => NULL));
+            
+            // flash message
+            $this->session->set_flashdata("message", "There are {$count} items unpublished!");
+        } else {
+            // blog item id
+            $this->data["item_id"] = (int) $this->security_clean($this->uri->segment(4, ""));
+
+            if (!$this->data["item_id"] || !is_numeric($this->data["item_id"])) {
+                $this->session->set_flashdata("error", "Illegal operation has occurred!");
+                redirect("cms/blog/search");
+            }
+
+            $this->common_model->set_table("blog_items");
+            $this->data["item"] = $this->common_model->get_row(array("id" => $this->data["item_id"]));
+            if (!$this->data["item"]) {
+                $this->session->set_flashdata("error", "The item not exist!");
+                redirect("cms/blog/search");
+            }
+
+            $upd_data = array(
+                "published" => 0
+            );
+            $this->common_model->update($upd_data, array('id' => $this->data["item_id"]));
+            
+            // flash message
+            $this->session->set_flashdata("message", "Item unpublished!");
+        }
+        
+        $jump_url = site_url("cms/blog/search");
+        header("Location: $jump_url");
+    }
+    
+    public function trash() {
+        // breadcrumbs
+        $this->position['item'][2]['title'] = "Item";
+        $this->position['item'][2]['url'] = site_url("cms/blog");
+        $this->position['item'][3]['title'] = "Trash";
+        $this->data['position'] = $this->load->view("pc/parts/position", $this->position, TRUE);
+        
+        // group item id
+        $id = $this->input->post("id");
+        if ($id) {
+            $count = count($id);
+            $id = implode(",", $id);
+            $this->common_model->set_table("blog_items");
+            $this->data["item"] = $this->common_model->get_row(array("id IN({$id})" => NULL));
+            if (!$this->data["item"]) {
+                $this->session->set_flashdata("error", "The item not exist!");
+                redirect("cms/blog/search");
+            }
+
+            $upd_data = array(
+                "delete_flag" => 1
+            );
+            $this->common_model->update($upd_data, array("id IN({$id})" => NULL));
+            
+            // flash message
+            $this->session->set_flashdata("message", "There are {$count} items moved to trash");
+        } else {
+            // blog item id
+            $this->data["item_id"] = (int) $this->security_clean($this->uri->segment(4, ""));
+            
+            if (!$this->data["item_id"] || !is_numeric($this->data["item_id"])) {
+                $this->session->set_flashdata("error", "Illegal operation has occurred!");
+                redirect("cms/blog/search");
+            }
+
+            $this->common_model->set_table("blog_items");
+            $this->data["item"] = $this->common_model->get_row(array("id" => $this->data["item_id"]));
+            if (!$this->data["item"]) {
+                $this->session->set_flashdata("error", "The item not exist!");
+                redirect("cms/blog/search");
+            }
+
+            $upd_data = array(
+                "delete_flag" => 1
+            );
+            $this->common_model->update($upd_data, array('id' => $this->data["item_id"]));
+            
+            // flash message
+            $this->session->set_flashdata("message", "Item move to trash!");
+        }
+        
+        $jump_url = site_url("cms/blog/search");
+        header("Location: $jump_url");
+    }
+    
+    public function restore() {
+        // breadcrumbs
+        $this->position['item'][2]['title'] = "Items";
+        $this->position['item'][2]['url'] = site_url("cms/blog");
+        $this->position['item'][3]['title'] = "Restore";
+        $this->data['position'] = $this->load->view("pc/parts/position", $this->position, TRUE);
+
+        // group item id
+        $id = $this->input->post("id");
+        if ($id) {
+            $count = count($id);
+            $id = implode(",", $id);
+            $this->common_model->set_table("blog_items");
+            $this->data["item"] = $this->common_model->get_all(array("id IN({$id})" => NULL, "delete_flag" => 1));
+            if (!$this->data["item"]) {
+                $this->session->set_flashdata("error", "The item not exist!");
+                redirect("cms/blog/search");
+            }
+            
+            $upd_data = array(
+                "delete_flag" => 0
+            );
+            $this->common_model->update($upd_data, array("id IN({$id})" => NULL));
+            
+            // flash message
+            $this->session->set_flashdata("message", "There are {$count} items restored!");
+        } else {
+            // blog item id
+            $this->data["item_id"] = (int) $this->security_clean($this->uri->segment(4, ""));
+            
+            if (!$this->data["item_id"] || !is_numeric($this->data["item_id"])) {
+                $this->session->set_flashdata("error", "Illegal operation has occurred!");
+                redirect("cms/blog/search");
+            }
+
+            $this->common_model->set_table("blog_items");
+            $this->data["item"] = $this->common_model->get_row(array("id" => $this->data["item_id"]));
+            if (!$this->data["item"]) {
+                $this->session->set_flashdata("error", "The item not exist!");
+                redirect("cms/blog/search");
+            }
+
+            $upd_data = array(
+                "delete_flag" => 0
+            );
+            $this->common_model->update($upd_data, array('id' => $this->data["item_id"]));
+            
+            // flash message
+            $this->session->set_flashdata("message", "Item restored!");
+        }
+        $jump_url = site_url("cms/blog/search/trash");
+        header("Location: $jump_url");
+    }
+    
+    public function delete() {
+        // breadcrumbs
+        $this->position['item'][2]['title'] = "Items";
+        $this->position['item'][2]['url'] = site_url("cms/blog");
+        $this->position['item'][3]['title'] = "Delete";
+        $this->data['position'] = $this->load->view("pc/parts/position", $this->position, TRUE);
+
+        // group item id
+        $id = $this->input->post("id");
+        if ($id) {
+            $count = count($id);
+            $id = implode(",", $id);
+            $this->common_model->set_table("blog_items");
+            $this->data["item"] = $this->common_model->get_all(array("id IN({$id})" => NULL, "delete_flag" => 1));
+            if (!$this->data["item"]) {
+                $this->session->set_flashdata("error", "The item not exist!");
+                redirect("cms/blog/search");
+            }
+            
+            $this->common_model->delete(array("id IN({$id})" => NULL));
+
+            // flash message
+            $this->session->set_flashdata("message", "There are {$count} items deleted!");
+        } else {
+            // blog item id
+            $this->data["item_id"] = (int) $this->security_clean($this->uri->segment(4, ""));
+            
+            if (!$this->data["item_id"] || !is_numeric($this->data["item_id"])) {
+                $this->session->set_flashdata("error", "Illegal operation has occurred!");
+                redirect("cms/blog/search");
+            }
+
+            $this->common_model->set_table("blog_items");
+            $this->data["item"] = $this->common_model->get_row(array("id" => $this->data["item_id"]));
+            if (!$this->data["item"]) {
+                $this->session->set_flashdata("error", "The item not exist!");
+                redirect("cms/blog/search");
+            }
+            
+            $this->common_model->delete(array('id' => $this->data["item_id"]));
+            
+            // flash message
+            $this->session->set_flashdata("message", "Item deleted!");
+        }
+        $jump_url = site_url("cms/blog/search/trash");
+        header("Location: $jump_url");
+    }
     
     public function photo_del() {
         $id = $this->security_clean($this->uri->segment(4, 0));
