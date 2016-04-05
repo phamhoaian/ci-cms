@@ -223,7 +223,7 @@ $metakey = array(
                     <div class="dz-preview dz-success">
                         <div class="dz-details">
                             <div class="dz-filename"><?php echo $item["title"]; ?></div>
-                            <img id="dz-image-preview" src="<?php echo base_url()."images/blog/items/".$item["id"]."_300.".$item["image"]; ?>"/>
+                            <img id="dz-image-preview" src="<?php echo base_url()."images/blog/items/".$item["id"]."_900.".$item["image"]; ?>"/>
                         </div>
                         <div class="dz-success-mark"></div>
                         <a class="dz-remove" href="<?php echo site_url("cms/blog/photo_del/".$item["id"]); ?>" data-dz-remove="">Remove file</a>

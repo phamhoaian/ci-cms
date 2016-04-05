@@ -349,6 +349,265 @@ body {
 .navbar-main .navbar-collapse {
     max-height: none;
 }
+.navbar-nav > li.dropdown:hover .dropdown-menu {
+    display: block;
+}
+.navbar-main .dropdown-sub-menu > ul {
+    position: absolute;
+    top: 0;
+    left: 100%;
+    z-index: 1000;
+    display: none;
+    max-width: 200px;
+    width: 200px;
+    padding: 0;
+    margin: 0;
+    font-size: 14px;
+    text-align: left;
+    list-style: none;
+    background-color: #fff;
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;    
+    border: none !important;
+    border-radius: 0;
+    background-color: #f1f1f1;
+    -webkit-box-shadow: 0 6px 12px rgba(79, 83, 103, 0.175);
+    box-shadow: 0 6px 12px rgba(79, 83, 103, 0.175);
+}
+.navbar-main .dropdown-menu li {
+    position: relative;
+}
+.navbar-main .dropdown-menu .dropdown-sub-menu:hover > ul {
+    display: block;
+}
+.navbar-main .dropdown-menu {
+    border: none !important;
+    padding: 0;
+    border-radius: 0;
+    max-width: 200px;
+    width: 200px;
+    background-color: #f1f1f1;
+    -webkit-box-shadow: 0 6px 12px rgba(79, 83, 103, 0.175);
+    box-shadow: 0 6px 12px rgba(79, 83, 103, 0.175);
+}
+.navbar-main .dropdown-menu li > a {
+    padding: 8px 15px;
+    position: relative;
+    display: block;
+    color: #777;
+    word-wrap: break-word;
+    white-space: normal;
+    -webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+    -o-transition: all 0.3s ease;
+    -ms-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+}
+.navbar-main .dropdown-menu li > a:hover {
+    background-color: #EB2C33;
+    color: #fff;
+}
+.navbar-main .dropdown-sub-menu > a:after {
+    content: "\f105";
+    color: #777;
+    font-family: FontAwesome;
+    font-style: normal;
+    font-weight: normal;
+    text-decoration: inherit;
+    font-size: 14px;
+    padding-left: 15px;
+    position: absolute;
+    top: 6px;
+    right: 10px;
+}
+.navbar-main .dropdown-sub-menu > a:hover:after {
+    color: #FFF;
+}
+/* Breadcrumb */
+.breadcrumb {
+    padding: 15px 0;
+    background-color: #FFF;
+    margin-bottom: 10px;
+}
+.breadcrumb > li + li:before {
+    font-family: "FontAwesome";
+    content: "\f105";
+    color: #99a0aa;
+    padding: 0px 8px;
+}
+.breadcrumb a:hover {
+    color: #EB2C33;
+}
+/* Entry */
+.entry {
+	padding-bottom: 50px;
+	margin-bottom: 50px;
+}
+.entry .entry-thumbnail {
+	position: relative;
+    overflow: hidden;
+    max-height: 450px;
+}
+.entry .entry-thumbnail img {
+	position: relative;
+    -webkit-transition: all 1s ease-out;
+    -moz-transition: all 1s ease-out;
+    -o-transition: all 1s ease-out;
+    -ms-transition: all 1s ease-out;
+    transition: all 1s ease-out;
+    -webkit-transform: scale(1);
+    -moz-transform: scale(1);
+    transform: scale(1);
+}
+.entry .entry-thumbnail:hover img{
+	-webkit-transform: scale(1.1);
+    -moz-transform: scale(1.1);
+    transform: scale(1.1);
+}
+.entry .entry-thumbnail .arrow {
+	content: "";
+	position: absolute;
+	border-right: 10px solid transparent;
+    border-bottom: 10px solid #f7f7f7;
+    border-top: none;
+    border-left: 10px solid transparent;
+    left: 50%;
+    bottom: 0;
+    z-index: 10;
+    margin-left: -10px;
+}
+.entry .entry-date {
+    position: relative;
+    height: 76px;
+    width: 76px;
+    background: #374456;
+    border: 0 none;
+    -webkit-border-radius: 0;
+    border-radius: 0;
+    -webkit-transition: all 0.5s ease-out;
+    -moz-transition: all 0.5s ease-out;
+    transition: all 0.5s ease-out;
+    top: -38px;
+    left: 50%;
+    margin-left: -38px;
+}
+.entry:hover .entry-date {
+	background: #EB2C33;
+}
+.entry .entry-date .day {
+	position: absolute;
+    top: 12px;
+    left: 12px;
+    bottom: auto;
+    right: auto;
+    text-align: left;
+    font-size: 24px;
+    line-height: 1;
+    font-weight: bold;
+    color: #fff;
+    text-transform: uppercase;
+}
+.entry .entry-date .month {
+	position: absolute;
+    bottom: 12px;
+    right: 12px;
+    top: auto;
+    left: auto;
+    text-align: right;
+    font-size: 16px;
+    line-height: 1;
+    font-weight: lighter;
+    color: #fff;
+    text-transform: uppercase;
+}
+.entry .entry-date .divider {
+	display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    bottom: auto;
+    right: auto;
+    -webkit-transform: translate(-50%, -50%) rotate(-45deg);
+    -ms-transform: translate(-50%, -50%) rotate(-45deg);
+    transform: translate(-50%, -50%) rotate(-45deg);
+    width: 80%;
+    height: 1px;
+    background: #fff;
+}
+.entry .entry-header {
+    padding: 0 0 15px;
+}
+.entry .entry-category a {
+    text-transform: uppercase;
+    color: #EB2C33;
+}
+.entry .entry-title {
+    font-size: 18px;
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+.entry .entry-title a {
+	color: #374456;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+.entry .entry-title a:hover {
+	color: #EB2C33;
+}
+.entry .entry-meta span {
+	margin-right: 15px;
+	color: #999999;
+}
+.entry .entry-content {
+    margin-bottom: 18px;
+}
+.entry .entry-readmore {
+	font-size: 14px;
+    font-weight: bold;
+    color: #374456;
+    border: 2px solid #374456;
+    text-transform: uppercase;
+    padding: 8px 30px;
+    display: inline-block;
+    margin: 0 auto;
+     -webkit-transition: all 0.5s ease-out;
+    -moz-transition: all 0.5s ease-out;
+    transition: all 0.5s ease-out;
+}
+.entry .entry-readmore:hover {
+	border-color: #EB2C33;
+	background-color: #EB2C33;
+	color: #FFF;
+}
+/* Pagination */
+.paging {
+	text-align: center;
+	margin-bottom: 50px;
+}
+.paging a,
+.paging span{
+    display: inline-block;
+    padding: 6px 12px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #374456;
+    -webkit-border-radius: 100%;
+    -moz-border-radius: 100%;
+    border-radius: 100%;
+    margin: 0 5px;
+    text-decoration: none;
+     -moz-transition: all .2s ease;
+    -o-transition: all .2s ease;
+    -webkit-transition: all .2s ease;
+    -ms-transition: all .2s ease;
+    transition: all .2s ease;
+}
+.paging a:hover,
+.paging span:hover,
+.paging .current{
+    background-color: #EB2C33 !important;
+    color: #fff;
+}
 /* Footer */
 #footer {
     background: url(../img/bg-footer.jpg) center center;

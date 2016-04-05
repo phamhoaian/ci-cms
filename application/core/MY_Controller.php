@@ -82,8 +82,8 @@ class MY_Controller extends CI_Controller {
 		set_include_path(get_include_path() . PATH_SEPARATOR . $path);
 		
 		$this->init_APP();
-		
-		
+        
+        $this->_init_nav();
 	}
 	
 	
@@ -1201,10 +1201,10 @@ class MY_Controller extends CI_Controller {
 			# ページ番号情報がどのURIセグメントに含まれるか指定します。
 			$config['uri_segment']    = $uri_segment;
 			# 生成するリンクのテンプレートを指定します。
-			$config['first_link']     = '&laquo; First';
+			$config['first_link']     = '&laquo;';
 			#$config['first_tag_open'] = '&nbsp;<span class="pager_text">';
 			#$config['first_tag_close'] = '</span>&nbsp;';
-			$config['last_link']      = 'Last &raquo;';
+			$config['last_link']      = '&raquo;';
 			#$config['last_tag_open'] = '&nbsp;<span class="pager_text">';
 			#$config['last_tag_close'] = '</span>&nbsp;';
 			
@@ -1216,10 +1216,10 @@ class MY_Controller extends CI_Controller {
 			#$config['num_tag_open'] = '<span class="pager">&nbsp;';
 			#$config['num_tag_close'] = '&nbsp;</span>';
             
-			$config['next_link'] = 'Next &gt;';
+			$config['next_link'] = '&gt;';
 			#$config['next_tag_open'] = '<span class="pager_text">';
 			#$config['next_tag_close'] = '</span>';
-			$config['prev_link'] = '&lt; Previous';
+			$config['prev_link'] = '&lt;';
 			#$config['prev_tag_open'] = '<span class="pager_text">';
 			#$config['prev_tag_close'] = '</span>';
 			
@@ -1284,8 +1284,38 @@ class MY_Controller extends CI_Controller {
 
         return $output;
     }
-	
-	protected function _getIntroText($str = '', $id = '') {
+    
+    protected function _subMenu($array, $depth = 1) {
+        if (!is_array($array)) {
+            return FALSE; 
+        }
+        $result = ''; 
+        if ($depth == 1) {
+            $result .= '<ul class="dropdown-menu list-unstyled fadeInUp animated">';
+        } else if ($depth > 1) {
+            $result .= '<ul class="fadeInUp animated">';
+        }
+        foreach ($array as $key => $value) {
+            if (!empty($value["children"])) {
+                $result .= '<li class="dropdown-sub-menu"><a href="#">'.$value["name"].'</a>';
+            } else {
+                $result .= '<li><a href="#">'.$value["name"].'</a>';
+            }
+            
+            if (!empty($value["children"])) {
+                $result .= $this->_subMenu($value["children"], $depth + 1);
+            }
+            
+            $result .= '</li>';
+        }
+        if ($depth >= 1) {
+            $result .= '</ul>';
+        }
+        return $result;
+    }
+
+
+    protected function _getIntroText($str = '', $id = '') {
         $output = '';
         
         //find position of tag identifier
@@ -1323,4 +1353,21 @@ class MY_Controller extends CI_Controller {
         return $output;
     }
 	
+    private function _init_nav() {
+        // connect to database 
+        $this->load->database();
+        
+        // load model
+        $this->load->model('common_model');
+        
+        // blog nav
+        $this->common_model->set_table("blog_categories");
+        $categories = $this->common_model->get_all(array("delete_flag" => 0, "published" => 1), "parent ASC");
+        if ($categories) {
+            $categories_tree = $this->_prepareList($categories, $categories[0]["parent"]);
+        } else {
+            $categories_tree = array();
+        }
+        $this->data["submenu_blog"] = $this->_subMenu($categories_tree);
+    }
 }

@@ -159,13 +159,18 @@
                         </div>
                         <div id="navbar-collapse-1" class="navbar-collapse collapse">
                             <ul class="nav navbar-nav">
-                                <li<?php if (isset($active_side_menu) && $active_side_menu == "blog") { ?> class="active"<?php } ?>>
+                                <li class="dropdown <?php if (isset($active_side_menu) && $active_side_menu == "blog") { echo "active"; } ?>">
                                     <a href="<?php echo site_url("blog"); ?>">Blog</a>
+                                    <?php 
+                                    if(isset($submenu_blog) && $submenu_blog) { 
+                                        echo $submenu_blog;
+                                    }
+                                    ?>
                                 </li>
                             </ul>
                             <ul class="nav navbar-nav navbar-right">
                                 <li>
-                                    <a href="">Contact</a>
+                                    <a href="#">Contact</a>
                                 </li>
                             </ul>
                         </div>

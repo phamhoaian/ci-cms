@@ -662,11 +662,11 @@ class Blog extends MY_Controller {
         
         $file_dir = FCPATH.$this->out_img_dir."/";
         $file100 = $file_dir.$id."_100.".$item["image"];
-		$file300 = $file_dir.$id."_300.".$item["image"];
+		$file900 = $file_dir.$id."_900.".$item["image"];
         
-        if (file_exists($file100) && file_exists($file300)) {
+        if (file_exists($file100) && file_exists($file900)) {
             unlink($file100);
-            unlink($file300);
+            unlink($file900);
         }
         $upd_data = array(
             "image" => ''
@@ -698,7 +698,7 @@ class Blog extends MY_Controller {
         } else {
             $data = $this->upload->data();
             
-            $this->ciframe_image_lib->convert_image_uploaded($data, 300, $file_dir, $this->data["item_id"]."_300", FALSE);
+            $this->ciframe_image_lib->convert_image_uploaded($data, 900, $file_dir, $this->data["item_id"]."_900", FALSE);
             $this->ciframe_image_lib->convert_image_uploaded($data, 100, $file_dir, $this->data["item_id"]."_100",  TRUE);
 
             return substr($data["file_ext"], strpos($data["file_ext"], ".") + 1);

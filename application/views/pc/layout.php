@@ -53,6 +53,7 @@ else
 <link rel="stylesheet" href="<?php echo base_url();?>common/css/bootstrap.min.css">
 <link rel="stylesheet" href="<?php echo base_url();?>common/css/font-awesome.min.css">
 <link rel="stylesheet" href="<?php echo base_url();?>common/css/yamm.css">
+<link rel="stylesheet" href="<?php echo base_url();?>common/css/animate.min.css">
 <link rel="stylesheet" href="<?php echo base_url();?>common/css/common.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script src="<?php echo base_url();?>common/js/bootstrap.min.js"></script>
@@ -72,9 +73,11 @@ else
 <section id="breadcrumbs">
     <div class="container">
         <div class="row">
-            <ul class="breadcrumb">
-                <?php echo $position; ?>
-            </ul>
+            <div class="col-md-12">
+                <ul class="breadcrumb">
+                    <?php echo $position; ?>
+                </ul>
+            </div>
         </div>
     </div>
 </section>
