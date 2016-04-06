@@ -16,7 +16,7 @@ jQuery(document).ready(function($) {
             	// Replace this with your function call for downward-scrolling
             	if (st > 50) {
             		header.addClass("header-top-fixed");
-            		headerTopRow.addClass("hidden");
+            		headerTopRow.addClass("hidden-lg");
             		headerFixed.addClass("header-main-fixed");
             		headerFixedBg.addClass("header-bg-fixed");
             	}
@@ -25,13 +25,21 @@ jQuery(document).ready(function($) {
             	// Replace this with your function call for upward-scrolling
             	if (st < 50) {
             		header.removeClass("header-top-fixed");
-            		headerTopRow.removeClass("hidden");
+            		headerTopRow.removeClass("hidden-lg");
             		headerFixed.removeClass("header-main-fixed");
             		headerFixedBg.removeClass("header-bg-fixed");
             	}
             }
             // Updates scroll position
             lastScroll = st;
+		});
+		
+		var body = $("body");
+		var headerHeight = header.height();
+		body.css("padding-top", headerHeight);
+		$(window).resize(function() {
+			var headerHeight = header.height();
+			body.css("padding-top", headerHeight);
 		});
     });
 });

@@ -2,7 +2,7 @@
     <div class="header-top-row">
         <div class="container">
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-7">
                     <div class="top-welcome hidden-xs hidden-sm">
                         <p>
                             Welcome Effect Template
@@ -13,7 +13,7 @@
                         </p>
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-5">
                     <div class="pull-right">
                         <div id="lang" class="pull-right">
                             <a class="lang-title" href="#">

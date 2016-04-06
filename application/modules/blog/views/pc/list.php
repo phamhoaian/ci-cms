@@ -34,7 +34,7 @@
                                         Administrator
                                     </span>
                                     <span>
-                                        <i class="fa fa-comment"></i>
+                                        <i class="fa fa-comments"></i>
                                         999 Comments
                                     </span>
                                 </div>
@@ -65,9 +65,9 @@
                     <?php echo $pagination; ?>
                 <?php endif; ?>
             </div>
-            <div class="col-md-3">
-                Right sidebar
-            </div>
+            <aside class="col-md-3">
+                <?php $this->load->view('pc/sidebar');?>
+            </aside>
         </div>
     </div>
 </section>
