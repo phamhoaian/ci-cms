@@ -50,8 +50,9 @@ else
 <meta property="og:site_name" content="<?php echo SITE_NAME; ?>">
 <meta property="og:locale" content="vi_VN" />
 <link rel="stylesheet" href="<?php echo base_url();?>common/css/font-awesome.min.css">
-<link rel="stylesheet" href="<?php echo base_url();?>common/css/login.css">
+<link rel="stylesheet" href="<?php echo base_url();?>common/css/auth.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="<?php echo base_url();?>common/js/bootstrap.min.js"></script>
 <?php echo $js;?>
 <?php echo $css;?>
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->

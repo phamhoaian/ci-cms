@@ -38,7 +38,7 @@ class Auth extends MY_Controller
 	}
 	
 	
-	function _remap($method)
+	public function _remap($method)
 	{
 		if($method == 'email_check' or $method == 'username_check' or $method == 'captcha_check' or $method == 'recaptcha_check')
 		{
@@ -57,7 +57,7 @@ class Auth extends MY_Controller
 	
 	
 	
-	function banned()
+	public function banned()
 	{
 		$this->message("こちらのIDではご利用できません。");
 		#$this->$method();
@@ -70,14 +70,14 @@ class Auth extends MY_Controller
 	
 	
 	
-	function index()
+	public function index()
 	{
 		$this->login();
 	}
 	
 	/* Callback function */
 	
-	function username_check($username)
+	public function username_check($username)
 	{
 		
 		$result = $this->dx_auth->is_username_available($username);
@@ -89,7 +89,7 @@ class Auth extends MY_Controller
 		return $result;
 	}
 
-	function email_check($email)
+	public function email_check($email)
 	{
 		$result = $this->dx_auth->is_email_available($email);
 		if ( ! $result)
@@ -100,7 +100,7 @@ class Auth extends MY_Controller
 		return $result;
 	}
 
-	function captcha_check($code)
+	public function captcha_check($code)
 	{
 
 		
@@ -121,7 +121,7 @@ class Auth extends MY_Controller
 		return $result;
 	}
 	
-	function recaptcha_check()
+	public function recaptcha_check()
 	{
 		$result = $this->dx_auth->is_recaptcha_match();		
 		if ( ! $result)
@@ -135,7 +135,7 @@ class Auth extends MY_Controller
 	/* End of Callback function */
 	
 	
-	function login()
+	public function login()
 	{
 
 		
@@ -294,7 +294,7 @@ class Auth extends MY_Controller
 		}
 	}
 	
-	function logout()
+	public function logout()
 	{
 		
 		$this->session->unset_userdata();
@@ -313,28 +313,23 @@ class Auth extends MY_Controller
 		$this->load_view($this->dx_auth->logout_view,$this->data,TRUE);
 	}
 	
-	function register()
+	public function register()
 	{
-	
 		if ( ! $this->dx_auth->is_logged_in() AND $this->dx_auth->allow_registration)
 		{	
 			$val = $this->form_validation;
 			
 			// Set form validation rules		
-			$val->set_error_delimiters('<div class="error"><strong><font color="#FF0000">*', '</font></strong></div>');	
+			$val->set_error_delimiters('<div class="error"><strong>* ', '</font></strong></div>');	
 			$val->set_rules('username', 'Username', 'trim|required|xss_clean|min_length['.$this->min_username.']|max_length['.$this->max_username.']|callback_username_check');
 			$val->set_rules('password', 'Password', 'trim|required|xss_clean|min_length['.$this->min_password.']|max_length['.$this->max_password.']|matches[confirm_password]');
 			$val->set_rules('confirm_password', 'Confirm Password', 'trim|required|xss_clean');
 			$val->set_rules('email', 'Email', 'trim|required|xss_clean|valid_email|callback_email_check');
 			
-			
 			if ($this->dx_auth->captcha_registration)
 			{
-				$val->set_rules('captcha', 'Confirmation Code', 'trim|xss_clean|required|callback_captcha_check');
+				$val->set_rules('captcha', 'confirmation code', 'trim|xss_clean|required|callback_captcha_check');
 			}
-			
-			
-			
 
 			// Run form validation and register user if its pass the validation
 			if ($val->run() AND $this->dx_auth->register($val->set_value('username'), $val->set_value('password'), $val->set_value('email')))
@@ -350,7 +345,7 @@ class Auth extends MY_Controller
 				}				
 				
 				// Load registration success page
-				$this->load_view($this->dx_auth->register_success_view, $this->data,TRUE);
+				$this->load_view($this->dx_auth->register_success_view, $this->data,TRUE, "auth/layout");
 			}
 			else
 			{
@@ -361,13 +356,13 @@ class Auth extends MY_Controller
 				}
 
 				// Load registration page
-				$this->load_view($this->dx_auth->register_view,null,TRUE);
+				$this->load_view($this->dx_auth->register_view,null,TRUE, "auth/layout");
 			}
 		}
 		elseif ( ! $this->dx_auth->allow_registration)
 		{
 			$this->data['auth_message'] = 'Registration has been disabled.';
-			$this->load_view($this->dx_auth->register_disabled_view, $this->data,TRUE);
+			$this->load_view($this->dx_auth->register_disabled_view, $this->data,TRUE, "auth/layout");
 		}
 		else
 		{
@@ -381,7 +376,7 @@ class Auth extends MY_Controller
 	
 
 	
-	function activate()
+	public function activate()
 	{
 	
 		// Get username and key
@@ -445,7 +440,7 @@ class Auth extends MY_Controller
 	
 	
 	
-	function forgot_password()
+	public function forgot_password()
 	{
 	
 		$val = $this->form_validation;
@@ -503,7 +498,7 @@ class Auth extends MY_Controller
 	
 	
 	
-	function reset_password()
+	public function reset_password()
 	{
 		// Get username and key
 		//$username = $this->uri->segment(3);
@@ -527,7 +522,7 @@ class Auth extends MY_Controller
 		}
 	}
 	
-	function change_password()
+	public function change_password()
 	{
 	
 		// Check if user logged in or not
@@ -559,7 +554,7 @@ class Auth extends MY_Controller
 		}
 	}	
 	
-	function cancel_account()
+	public function cancel_account()
 	{
 	
 		// Check if user logged in or not
@@ -594,7 +589,7 @@ class Auth extends MY_Controller
 	
 	
 	// アクセス拒否
-	function deny()
+	public function deny()
 	{
 
 		

@@ -54,7 +54,8 @@ img {
 input[type="text"], 
 input[type="password"] {
     border: 0px;
-    background: rgba(0, 0, 0, 0.2);
+    background-color: #39424A;
+    background-color: rgba(0, 0, 0, 0.2);
     padding: 10px 15px;
     color: #CCC;
     line-height: 20px;
@@ -78,7 +79,11 @@ input[type="password"] {
 }
 input[type="text"]:focus, 
 input[type="password"]:focus {
-    background: rgba(0, 0, 0, 0.3);
+    background-color: rgba(0, 0, 0, 0.3);
+}
+input:-webkit-autofill {
+    transition: background-color 5000s ease-in-out 0s;
+    -webkit-text-fill-color: #CCC;
 }
 input[type="checkbox"] {
     display: inline-block;
@@ -118,15 +123,15 @@ hr {
 .floatR {
     float: right;
 }
-#login {
+#login, #register-form {
     width: 400px;
     margin: 50px auto;
 }
-.login-logo {
+.login-logo, .form-head {
     text-align: center;
     padding: 0 0 20px;
 }
-.login-body {
+.login-body, .form-body {
     width: 100%;
     background: rgba(255, 255, 255, 0.08);
     padding: 20px;
@@ -134,7 +139,7 @@ hr {
     -webkit-border-radius: 5px;
     border-radius: 5px;
 }
-.login-title {
+.login-title, .form-title {
     color: #FFF;
     font-size: 17px;
     font-weight: 300;
@@ -161,8 +166,14 @@ hr {
     color: #ED4147;
     margin-top: 5px;
 }
+.help-block {
+    margin-top: 7px;
+}
+.captcha img {
+    margin-bottom: 8px;
+}
 @media screen and (max-width: 400px) {
-    #login {
+    #login, #register-form {
         width: 100%;
         padding:0 15px;
     }

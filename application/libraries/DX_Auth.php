@@ -168,42 +168,15 @@ class DX_Auth
 	
 	function _email($to, $from, $subject, $message)
 	{
-		$this->ci->load->library('qdmail');
-		
-        $subject  = $subject;
-        $body     = $message;
-        $fromname = $from;
-        $reply_to = $from;
-        $from     = $from;
-        $to       = $to;
-        
-        //半角カナを変換
-        $body = mb_convert_kana($body , "KV" , 'UTF8');
-        $subject = mb_convert_kana($subject , "KV" , 'UTF8');
-        
-        mb_language("Ja");
-        mb_internal_encoding("UTF8");
-        
-        $parameter ='-f '.$reply_to;
-        $option = array(
-            'type'=>'text',
-            'option'=>array(
-                'mtaOption'=>$parameter
-            )
-        );
-        
-        $var['from'] = array("$from","$fromname");
-        $var['reply-to'] = array("$reply_to","$fromname");
-        
-        //送信
-        if(qd_send_mail($option,$to,"$subject","$body",$var))
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+		$this->ci->load->library('Email');
+		$email = $this->ci->email;
+
+		$email->from($from);
+		$email->to($to);
+		$email->subject($subject);
+		$email->message($message);
+
+		return $email->send();
 	}
 	
 	// Set last ip and last login function when user login
