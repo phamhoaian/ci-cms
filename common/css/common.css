@@ -14,6 +14,21 @@ a:hover {
     color: #aaa;
     text-decoration: none;
 }
+/* Gr table */
+.gr-table {
+    display: table;
+    table-layout: fixed;
+    width: 100%;
+    vertical-align: top;
+    border-collapse: collapse;
+}
+.gr-table-cell {
+    display: table-cell;
+    vertical-align: top;
+}
+.gr-table.align-middle .gr-table-cell {
+    vertical-align: middle;
+}
 /* Header */
 #header {
     position: absolute;
@@ -539,6 +554,7 @@ a:hover {
     margin-top: 0;
     margin-bottom: 15px;
 }
+.entry .entry-title,
 .entry .entry-title a {
 	color: #374456;
     font-weight: bold;
@@ -551,6 +567,9 @@ a:hover {
 .entry .entry-meta span {
 	margin-right: 15px;
 	color: #999999;
+}
+.entry .entry-meta span .fa {
+	margin-right: 5px;
 }
 .entry .entry-content {
     margin-bottom: 18px;
@@ -572,6 +591,70 @@ a:hover {
 	border-color: #EB2C33;
 	background-color: #EB2C33;
 	color: #FFF;
+}
+.entry .content-header {
+	margin-bottom: 40px;
+}
+.entry .content-header .entry-date {
+	top: 0;
+    left: 0;
+    margin: 0;
+}
+.entry .gr-table .gr-table-cell:first-child {
+    width: 95px;
+}
+.entry .content-thumbnail {
+	margin-bottom: 30px;
+}
+.entry .content-main,
+.entry .content-author {
+	margin-bottom: 50px;
+}
+.entry .content-author > .gr-table > .gr-table-cell {
+	width: 50%;
+}
+.entry .content-author > .gr-table > .gr-table-cell:first-child {
+	border-right: 1px solid #ececec;
+    padding-left: 60px;
+    padding-right: 35px;
+}
+.entry .content-author > .gr-table > .gr-table-cell.last {
+	padding-left: 35px;
+	padding-right: 60px;
+}
+.entry .content-author .author-avatar {
+	position: relative;
+    overflow: hidden;
+    display: block;
+   	max-width: 95px;
+   	max-height: 95px;
+}
+.entry .content-author .author-avatar img {
+	-webkit-border-radius: 100%;
+	-moz-border-radius: 100%;
+	-o-border-radius: 100%;
+	-ms-border-radius: 100%;
+	border-radius: 100%;
+}
+.entry .content-author .author-title {
+	font-size: 24px;
+    font-weight: bold;
+    color: #374456;
+    text-transform: uppercase;
+}
+.entry .content-author .author-info {
+	color: #EB2C33;
+}
+.entry .content-author .author-social > li {
+	display: inline-block;
+	margin-right: 30px;
+}
+.entry .content-author .author-social > li > a {
+	font-size: 18px;
+    color: #374456;
+}
+.entry .content-author .author-social > li > a:hover {
+	color: #EB2C33;
 }
 /* Widget */
 .widget-block {

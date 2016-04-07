@@ -76,4 +76,41 @@ class Blog extends MY_Controller {
         // load view
         $this->load_view("list", $this->data);
     }
+    
+    public function detail() {
+        // id
+        $id = $this->security_clean($this->uri->segment(3, ""));
+        
+        $this->common_model->set_table("blog_items");
+        $this->data["item"] = $this->common_model->get_row(array("id" => $id));
+        if (!$this->data["item"]) {
+            redirect("blog");
+        }
+        
+        // breadcrumbs
+        $this->position['item'][1]['title'] = "Blog";
+        $this->position['item'][1]['url']= site_url("blog");
+        $this->position['item'][2]['title'] = $this->data["item"]["title"];
+        $this->data['position'] = $this->load->view("pc/parts/position", $this->position, TRUE);
+        
+        // recent posts
+        $this->common_model->set_table("blog_items");
+        $where = array(
+                "blog_items.delete_flag" => 0,
+                "blog_items.published" => 1
+        );
+        $this->data["recent_posts"] = $this->common_model->get_all($where, "published_date DESC", $this->limit_recent_posts);
+        
+        // most view
+        $this->common_model->set_table("blog_items");
+        $where = array(
+                "blog_items.delete_flag" => 0,
+                "blog_items.published" => 1
+        );
+        $this->data["most_view"] = $this->common_model->get_all($where, "hits DESC", $this->limit_most_view);
+        
+        
+        // load view
+        $this->load_view("detail", $this->data);
+    }
 }
