@@ -629,7 +629,7 @@ a:hover {
     transform: scale(1.2);
 }
 .post .post-content {
-	padding: 0 20px;
+	padding: 0 0 0 20px;
 }
 .post .post-title {
 	color: #374456;
@@ -638,6 +638,7 @@ a:hover {
     line-height: 22px;
     margin: -6px 0 10px;
     display: inline-block;
+    word-break: break-word;
 }
 .post .post-title:hover {
 	color: #EB2C33;

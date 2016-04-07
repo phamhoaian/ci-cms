@@ -28,6 +28,7 @@ class Blog extends MY_Controller {
         // the number of item per page
         $this->limit = 3;
         $this->limit_recent_posts = 3;
+        $this->limit_most_view = 3;
         
         $this->temp_img_dir = "images/temp";
 		$this->out_img_dir = "images/blog/items";
@@ -63,6 +64,14 @@ class Blog extends MY_Controller {
             "blog_items.published" => 1
         );
         $this->data["recent_posts"] = $this->common_model->get_all($where, "published_date DESC", $this->limit_recent_posts);
+        
+        // most view
+        $this->common_model->set_table("blog_items");
+        $where = array(
+            "blog_items.delete_flag" => 0,
+            "blog_items.published" => 1
+        );
+        $this->data["most_view"] = $this->common_model->get_all($where, "hits DESC", $this->limit_most_view);
         
         // load view
         $this->load_view("list", $this->data);
