@@ -1297,9 +1297,9 @@ class MY_Controller extends CI_Controller {
         }
         foreach ($array as $key => $value) {
             if (!empty($value["children"])) {
-                $result .= '<li class="dropdown-sub-menu"><a href="#">'.$value["name"].'</a>';
+                $result .= '<li class="dropdown-sub-menu"><a href="'.$value["link"].'">'.$value["name"].'</a>';
             } else {
-                $result .= '<li><a href="#">'.$value["name"].'</a>';
+                $result .= '<li><a href="'.$value["link"].'">'.$value["name"].'</a>';
             }
             
             if (!empty($value["children"])) {
@@ -1364,10 +1364,15 @@ class MY_Controller extends CI_Controller {
         $this->common_model->set_table("blog_categories");
         $categories = $this->common_model->get_all(array("delete_flag" => 0, "published" => 1), "parent ASC");
         if ($categories) {
+			// add link
+			foreach ($categories as &$category) {
+				$category["link"] = site_url("blog/category/".$category["id"]);
+			}
             $categories_tree = $this->_prepareList($categories, $categories[0]["parent"]);
         } else {
             $categories_tree = array();
         }
+
         $this->data["submenu_blog"] = $this->_subMenu($categories_tree);
     }
 }

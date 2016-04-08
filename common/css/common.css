@@ -337,7 +337,7 @@ a:hover {
     transition: all 0.3s ease;
 }
 .navbar-main .nav > li.active > a,
-.navbar-main .nav > li > a:hover {
+.navbar-main .nav > li:hover > a {
     background-color: #EB2C33;
     border-color: #FFF;
 }
