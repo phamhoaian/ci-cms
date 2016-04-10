@@ -35,6 +35,7 @@
 				<ul class="nav child-menu">
 					<li<?php if (isset($active_sub_menu) && $active_sub_menu == "blog_items") { ?> class="current"<?php } ?>><a href="<?php echo site_url("cms/blog"); ?>">Items</a></li>
 					<li<?php if (isset($active_sub_menu) && $active_sub_menu == "blog_categories") { ?> class="current"<?php } ?>><a href="<?php echo site_url("cms/blog_categories"); ?>">Categories</a></li>
+					<li<?php if (isset($active_sub_menu) && $active_sub_menu == "blog_tags") { ?> class="current"<?php } ?>><a href="<?php echo site_url("cms/blog_tags"); ?>">Tags</a></li>
 				</ul>
 			</li>
 		</ul>
