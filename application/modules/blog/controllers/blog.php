@@ -50,18 +50,15 @@ class Blog extends MY_Controller {
 		$this->data["most_view"] = $this->common_model->get_all($where, "hits DESC", $this->limit_most_view);
     }
     
-    public function index() {
+    public function index($offset = 0) {
         // breadcrumbs
         $this->position['item'][1]['title'] = "Blog";
         $this->position['item'][1]['url']= "";
         $this->data['position'] = $this->load->view("pc/parts/position", $this->position, TRUE);
         
-        // offset
-        $offset = (int) $this->uri->segment(3, 0);
-        
         // list items
         $this->common_model->set_table("blog_items");
-        $this->db->select("blog_items.*, blog_categories.name as cat_name");
+        $this->db->select("blog_items.*, blog_categories.alias as cat_alias");
         $this->db->join("blog_categories", "blog_items.cat_id = blog_categories.id", "inner");
         $where = array(
             "blog_items.delete_flag" => 0,
@@ -70,20 +67,20 @@ class Blog extends MY_Controller {
         $this->data["items"] = $this->common_model->get_all($where, "published_date DESC", $this->limit, $offset);
         $this->data["count_items"] = $this->common_model->get_count($where);
         
-        $path = "blog/index";
-        $this->data["pagination"] = $this->generate_pagination($path, $this->data["count_items"], $this->limit, 3);
-        $this->data["most_view"] = $this->common_model->get_all($where, "hits DESC", $this->limit_most_view);
+        $path = "blog";
+        $this->data["pagination"] = $this->generate_pagination($path, $this->data["count_items"], $this->limit, 2);
         
         // load view
         $this->load_view("list", $this->data);
     }
     
-    public function category() {
+    public function category($alias = '', $offset = 0) {
+        // alias
+        //print_r($alias);
         
-        // category id
-        $cat_id = (int) $this->uri->segment(3, 0);
+        // category
         $this->common_model->set_table("blog_categories");
-        $this->data["category"] = $this->common_model->get_all(array("id" => $cat_id), 'id DESC', 1);
+        $this->data["category"] = $this->common_model->get_all(array("alias" => $alias), 'id DESC', 1);
         if (!$this->data["category"]) {
             redirect(site_url("blog"));
         }
@@ -95,19 +92,16 @@ class Blog extends MY_Controller {
         $this->data['position'] = $this->load->view("pc/parts/position", $this->position, TRUE);
         
         // child categories id
-        $child_cat = $this->_listChildCategory($cat_id);
+        $child_cat = $this->_listChildCategory($this->data["category"][0]["id"]);
         $child_cat = $this->_array_flatten($child_cat);
         
         // merge categories
         $categories = array_merge($this->data["category"], $child_cat);
         $categories = implode(",", array_column($categories, "id"));
         
-        // offset
-        $offset = (int) $this->uri->segment(4, 0);
-        
         // list items
         $this->common_model->set_table("blog_items");
-        $this->db->select("blog_items.*, blog_categories.name as cat_name");
+        $this->db->select("blog_items.*, blog_categories.alias as cat_alias");
         $this->db->join("blog_categories", "blog_items.cat_id = blog_categories.id", "inner");
         $where = array(
             "blog_items.delete_flag" => 0,
@@ -117,27 +111,35 @@ class Blog extends MY_Controller {
         $this->data["items"] = $this->common_model->get_all($where, "published_date DESC", $this->limit, $offset);
         $this->data["count_items"] = $this->common_model->get_count($where);
         
-        $path = "blog/category/".$cat_id;
-        $this->data["pagination"] = $this->generate_pagination($path, $this->data["count_items"], $this->limit, 4);
+        $path = "blog/".$alias;
+        $this->data["pagination"] = $this->generate_pagination($path, $this->data["count_items"], $this->limit, 3);
         
         // load view
         $this->load_view("list", $this->data);
     }
     
-    public function detail() {
-        // id
-        $id = $this->security_clean($this->uri->segment(3, ""));
+    public function item($alias = '', $id = '') {
         
+        // item
         $this->common_model->set_table("blog_items");
         $this->data["item"] = $this->common_model->get_row(array("id" => $id));
         if (!$this->data["item"]) {
             redirect(site_url("blog"));
         }
         
+        // item's category
+        $this->common_model->set_table("blog_categories");
+        $this->data["category"] = $this->common_model->get_row(array("id" => $this->data["item"]["cat_id"]));
+        if (!$this->data["category"]) {
+            redirect(site_url("blog"));
+        }
+        
         // breadcrumbs
         $this->position['item'][1]['title'] = "Blog";
         $this->position['item'][1]['url']= site_url("blog");
-        $this->position['item'][2]['title'] = $this->data["item"]["title"];
+        $this->position['item'][2]['title'] = $this->data["category"]["name"];
+        $this->position['item'][2]['url']= site_url("blog/".$this->data["category"]["alias"]);
+        $this->position['item'][3]['title'] = $this->data["item"]["title"];
         $this->data['position'] = $this->load->view("pc/parts/position", $this->position, TRUE);
         
         

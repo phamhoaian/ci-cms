@@ -6,13 +6,13 @@
 		<article class="post">
 			<div class="post-inner-table">
 				<div class="post-table-cell">
-					<a href="<?php echo site_url("blog/detail/".$post["id"])?>" class="post-thumbnail">
+					<a href="<?php echo site_url("blog/".$post["alias"]."-".$post["id"]); ?>" class="post-thumbnail">
 						<img src="<?php echo base_url()."images/blog/items/".$post["id"]."_100.".$post["image"]; ?>" alt="<?php echo $post["title"]; ?>" />
 					</a>
 				</div>
 				<div class="post-table-cell">
 					<div class="post-content">
-						<a href="" class="post-title"><?php echo $post["title"]; ?></a>
+						<a href="<?php echo site_url("blog/".$post["alias"]."-".$post["id"]); ?>" class="post-title"><?php echo $post["title"]; ?></a>
 						<div class="post-meta">
 							<span>
 								<i class="fa fa-calendar"></i>
@@ -39,13 +39,13 @@
 		<article class="post">
 			<div class="post-inner-table">
 				<div class="post-table-cell">
-					<a href="<?php echo site_url("blog/detail/".$post["id"])?>" class="post-thumbnail">
+					<a href="<?php echo site_url("blog/".$post["alias"]."-".$post["id"]); ?>" class="post-thumbnail">
 						<img src="<?php echo base_url()."images/blog/items/".$post["id"]."_100.".$post["image"]; ?>" alt="<?php echo $post["title"]; ?>" />
 					</a>
 				</div>
 				<div class="post-table-cell">
 					<div class="post-content">
-						<a href="" class="post-title"><?php echo $post["title"]; ?></a>
+						<a href="<?php echo site_url("blog/".$post["alias"]."-".$post["id"]); ?>" class="post-title"><?php echo $post["title"]; ?></a>
 						<div class="post-meta">
 							<span>
 								<i class="fa fa-eye"></i>

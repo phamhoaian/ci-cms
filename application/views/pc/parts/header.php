@@ -17,20 +17,20 @@
                     <div class="pull-right">
                         <div id="lang" class="pull-right">
                             <a class="lang-title" href="#">
-                                <img src="<?php echo site_url("common/img/f-gb.png"); ?>" alt="English" title="English">
+                                <img src="<?php echo base_url("common/img/f-gb.png"); ?>" alt="English" title="English">
                                 English
                                 <i class="fa fa-angle-down"></i>
                             </a>
                             <ul class="list-unstyled lang-item">
                                 <li>
                                     <a href="#">
-                                        <img src="<?php echo site_url("common/img/f-gb.png"); ?>" alt="English" title="English">
+                                        <img src="<?php echo base_url("common/img/f-gb.png"); ?>" alt="English" title="English">
                                         English
                                     </a>
                                 </li>
                                 <li>
                                     <a href="#">
-                                        <img src="<?php echo site_url("common/img/f-fr.png"); ?>" alt="French" title="French">
+                                        <img src="<?php echo base_url("common/img/f-fr.png"); ?>" alt="French" title="French">
                                         French
                                     </a>
                                 </li>
@@ -104,7 +104,7 @@
                         <div class="row">
                             <div class="col-md-3">
                                 <a href="<?php echo site_url(); ?>" class="header-logo">
-                                    <img src="<?php echo site_url("common/img/logo-big-shop.png"); ?>" alt="Effect">
+                                    <img src="<?php echo base_url("common/img/logo-big-shop.png"); ?>" alt="Effect">
                                 </a>
                             </div>
                             <div class="col-md-5">

@@ -14,7 +14,7 @@
 									</div>
 								</div>
 								<div class="gr-table-cell">
-									<h1 class="entry-title"><?php echo $item["title"]; ?></a></h1>
+									<h1 class="entry-title"><?php echo $item["title"]; ?></h1>
 									<div class="entry-meta">
                                         <span>
                                             <i class="fa fa-pencil"></i>

@@ -1366,7 +1366,7 @@ class MY_Controller extends CI_Controller {
         if ($categories) {
 			// add link
 			foreach ($categories as &$category) {
-				$category["link"] = site_url("blog/category/".$category["id"]);
+				$category["link"] = site_url("blog/".$category["alias"]);
 			}
             $categories_tree = $this->_prepareList($categories, $categories[0]["parent"]);
         } else {

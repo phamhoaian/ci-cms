@@ -41,5 +41,11 @@
 $route['default_controller'] = "home";
 $route['404_override'] = '';
 
+$route['blog/(:any)-(:num)'] = 'blog/item/$1/$2';
+$route['blog\.html/(:num)'] = 'blog/index/$1';
+$route['blog'] = 'blog/index';
+$route['blog/(:any)\.html/(:num)'] = 'blog/category/$1/$2';
+$route['blog/(:any)'] = 'blog/category/$1';
+
 /* End of file routes.php */
 /* Location: ./application/config/routes.php */

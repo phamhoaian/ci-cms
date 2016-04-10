@@ -13,7 +13,7 @@
                                 if (file_exists($file_thumbnail)) {
                                 ?>
                                 <div class="entry-thumbnail">
-                                	<a href="<?php echo site_url("blog/detail/".$item["id"]); ?>">
+                                	<a href="<?php echo site_url("blog/".$item["alias"]."-".$item["id"]); ?>">
                                 		<img src="<?php echo base_url()."images/blog/items/".$item["id"]."_900.".$item["image"]; ?>" alt="<?php echo $item["title"] ?>" />
                                 	</a>
                                 </div>
@@ -26,7 +26,7 @@
                             		<span class="divider"></span>
                             	</div>
                                 <h2 class="entry-title">
-                                    <a href="<?php echo site_url("blog/detail/".$item["id"]); ?>"><?php echo $item["title"]; ?></a>
+                                    <a href="<?php echo site_url("blog/".$item["alias"]."-".$item["id"]); ?>"><?php echo $item["title"]; ?></a>
                                 </h2>
                                 <div class="entry-meta">
                                     <span>
@@ -58,7 +58,7 @@
                                 }
                             ?>
                             </div>
-                            <a class="entry-readmore" href="<?php echo site_url("blog/detail/".$item["id"]); ?>">Read more</a>
+                            <a class="entry-readmore" href="<?php echo site_url("blog/".$item["alias"]."-".$item["id"]); ?>">Read more</a>
                         </div>
                     </article>
                     <?php endforeach; ?>

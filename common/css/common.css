@@ -614,7 +614,7 @@ a:hover {
 	width: 50%;
 }
 .entry .content-author > .gr-table > .gr-table-cell:first-child {
-	border-right: 1px solid #ececec;
+	border-right: 1px solid #ddd;
     padding-left: 60px;
     padding-right: 35px;
 }

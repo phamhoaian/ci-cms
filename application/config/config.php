@@ -58,7 +58,7 @@ $config['uri_protocol'] = "PATH_INFO";
 | http://codeigniter.com/user_guide/general/urls.html
 */
 
-$config['url_suffix'] = '';
+$config['url_suffix'] = '.html';
 
 /*
 |--------------------------------------------------------------------------
@@ -128,7 +128,7 @@ $config['subclass_prefix'] = 'MY_';
 |
 */
 $config['permitted_uri_chars'] = 'a-z 0-9~%.:_\-';
-$config['permitted_uri_chars'] = '一-龠ぁ-んァ-ヴーａ-ｚＡ-Ｚ０-９a-z 0-9~%.:_-';
+//$config['permitted_uri_chars'] = '一-龠ぁ-んァ-ヴーａ-ｚＡ-Ｚ０-９a-z 0-9~%.:_-';
 
 
 /*
