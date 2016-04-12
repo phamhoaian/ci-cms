@@ -73,6 +73,10 @@ class Blog_tags extends MY_Controller {
        $this->common_model->set_table("blog_tags");
        $this->data["tags"] = $this->common_model->like(null, array("name" => $like), "id DESC", $this->data["limit"], $offset);
        $this->data["count_tags"] = $this->common_model->get_count(null, array("name" => $like));
+       foreach ($this->data["tags"] as &$tag) {
+           $this->common_model->set_table("blog_tags_xref");
+           $tag["count"] = $this->common_model->get_count(array("tagID" => $tag["id"]));
+       }
        
        // generate pagination
        $this->data["key"] = "-";

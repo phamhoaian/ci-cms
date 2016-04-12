@@ -29,6 +29,7 @@ class Blog extends MY_Controller {
         $this->limit = 3;
         $this->limit_recent_posts = 3;
         $this->limit_most_view = 3;
+        $this->limit_tags = 10;
         
         $this->temp_img_dir = "images/temp";
 		$this->out_img_dir = "images/blog/items";
@@ -48,6 +49,17 @@ class Blog extends MY_Controller {
 	        "blog_items.published" => 1
 		);
 		$this->data["most_view"] = $this->common_model->get_all($where, "hits DESC", $this->limit_most_view);
+        
+        // list tags
+        $this->common_model->set_table("blog_tags");
+       $this->data["list_tags"] = $this->common_model->get_all(array("published" => 1), "id DESC", $this->limit_tags);
+       foreach ($this->data["list_tags"] as &$tag) {
+           $this->common_model->set_table("blog_tags_xref");
+           $tag["count"] = $this->common_model->get_count(array("tagID" => $tag["id"]));
+           if (!$tag["count"]) {
+               unset($tag);
+           }
+       }
     }
     
     public function index($offset = 0) {
@@ -75,8 +87,6 @@ class Blog extends MY_Controller {
     }
     
     public function category($alias = '', $offset = 0) {
-        // alias
-        //print_r($alias);
         
         // category
         $this->common_model->set_table("blog_categories");
@@ -116,6 +126,10 @@ class Blog extends MY_Controller {
         
         // load view
         $this->load_view("list", $this->data);
+    }
+    
+    public function tag($tag_id = '', $offset = 0) {
+        
     }
     
     public function item($alias = '', $id = '') {

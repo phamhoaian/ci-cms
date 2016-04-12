@@ -24,12 +24,19 @@ foreach ($list_categories as $row) {
 	}
 	$category["{$row["id"]}"] = $row["name"];
 }
-$tags = array(
-    "name" => "tags",
-    "id" => "tags",
-    "class" => "tags form-control",
-    "value" => "social, adverts, sales"
-);
+if(!$list_tags){
+	$list_tags = array();
+}
+$tags = array();
+$html_tags = '<select name="tags[]" id="tags" class="form-control" multiple="multiple">';
+foreach($list_tags as $tag){
+    $selected = '';
+    if(in_array($tag["id"], $list_tags_xref)){
+        $selected = ' selected="selected" ';
+    }
+    $html_tags .= '<option value="'.$tag["id"].'" '.$selected.'>'.$tag["name"].'</option>';
+}
+$html_tags .= '</select>';
 $featured = array(
 	"name" => "featured",
 	"class" => "js-switch",
@@ -154,8 +161,8 @@ $metakey = array(
 						Tags
 					</label>
                     <div class="col-lg-7 col-md-8 col-sm-7 col-xs-12">
-                        <?php echo form_input($tags); ?>
-                        <?php echo form_error($tags["name"]); ?>
+                        <?php echo $html_tags; ?>
+                        <?php echo form_error('tags[]'); ?>
                     </div>
                 </div>
                 <div class="form-group">
@@ -332,8 +339,8 @@ $metakey = array(
         $("#category").select2();
         
         // tags
-        $('#tags').tagsInput({
-            width: 'auto'
+        $('#tags').select2({
+            tags: true
         });
         
         // switcher

@@ -31,6 +31,21 @@
 	</div>
 </div>
 <?php endif; ?>
+<?php if ($list_tags && count($list_tags) > 0) : ?>
+<div class="widget-block">
+	<h3 class="widget-title">Tags</h3>
+	<ul class="tags red">
+		<?php foreach ($list_tags as $tag) : ?>
+        <li>
+            <a href="<?php echo site_url("blog/tag/".$tag["id"]); ?>">
+                <?php echo $tag["name"]; ?>
+                <span><?php echo $tag["count"]; ?></span>
+            </a>
+        </li>
+		<?php endforeach; ?>
+	</ul>
+</div>
+<?php endif; ?>
 <?php if ($most_view && count($most_view) > 0) : ?>
 <div class="widget-block">
 	<h3 class="widget-title">Most view</h3>

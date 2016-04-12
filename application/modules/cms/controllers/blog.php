@@ -191,6 +191,21 @@ class Blog extends MY_Controller {
         }
         $this->data["list_categories"] = array_slice($this->_array_flatten($categories_tree, 1, "form"), 0);
         
+        // list tags
+        $this->common_model->set_table("blog_tags");
+        $this->data["list_tags"] = $this->common_model->get_all(array("published" => 1), "id DESC");
+        
+        // tags xref
+        $this->data["list_tags_xref"] = array();
+        if ($this->data["item_id"]) {
+            $this->common_model->set_table("blog_tags_xref");
+            $this->db->select("GROUP_CONCAT(tagID) as tag");
+            $list_tags_xref = $this->common_model->get_row(array("itemID" => $this->data["item_id"]));
+            if($list_tags_xref && $list_tags_xref["tag"]){
+				$this->data["list_tags_xref"] = explode(",", $list_tags_xref["tag"]);
+			}
+        }
+        
         // form validation
         $this->load->helper('form');
         $this->load->library('form_validation');
@@ -199,7 +214,7 @@ class Blog extends MY_Controller {
         $this->form_validation->set_rules("title", "title", "required|trim|xss_clean");
         $this->form_validation->set_rules("alias", "title alias", "trim|xss_clean");
         $this->form_validation->set_rules("category", "category", "required|trim|xss_clean");
-        $this->form_validation->set_rules("tags", "tags", "trim|xss_clean");
+        $this->form_validation->set_rules("tags[]", "tags", "trim|xss_clean");
         $this->form_validation->set_rules("featured", "featured", "trim|xss_clean|max_lenght[1]|integer");
         $this->form_validation->set_rules("published", "published", "trim|xss_clean|max_lenght[1]|integer");
         $this->form_validation->set_rules("content", "content", "trim|xss_clean");
@@ -211,7 +226,6 @@ class Blog extends MY_Controller {
         $this->form_validation->set_rules("metakey", "metakey", "trim|xss_clean");
         
         if ($this->form_validation->run()) {
-            
             
             // prepare data
             $upd_data = array(
@@ -262,6 +276,28 @@ class Blog extends MY_Controller {
                 "image" => $image
             );
             $this->common_model->update($upd_data, array('id' => $this->data["item_id"]));
+            
+            // update blog tags xref
+			$current_tags_xref = $this->data["list_tags_xref"];
+			$new_tags_xref = $this->input->post("tags");
+			$this->common_model->set_table('blog_tags_xref');
+			if(!$new_tags_xref){
+				$new_tags_xref = array();
+			}
+			
+			// delete tag xref
+			foreach($current_tags_xref as $tag){
+				if(!in_array($tag, $new_tags_xref)){
+					$this->common_model->delete(array("itemID" => $this->data["item_id"], "tagID" => $tag));
+				}
+			}
+			//insert new tag xref
+			foreach($new_tags_xref as $tag){
+				if(!in_array($tag, $current_tags_xref)){
+					$data_map = array("itemID" => $this->data["item_id"], "tagID" => $tag);
+					$this->common_model->insert($data_map);
+				}
+			}
             
             $this->session->set_flashdata("message", $message);
             redirect("cms/blog/search");

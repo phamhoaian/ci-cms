@@ -740,6 +740,13 @@ table.jambo_table tbody tr.selected td {
     color: #000;
     outline: 0px;
 }
+.select2-container--default .select2-selection--multiple .select2-selection__choice {
+    background-color: #1ABB9C !important;
+    color: #FFF;
+}
+.select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+    color: #FFF !important;
+}
 @media (max-width: 1024px) {
     table.jambo_table .btn {
         margin: 2px 0;

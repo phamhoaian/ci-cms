@@ -136,7 +136,7 @@ foreach ($list_limit as $val) {
                                             </a>
                                         	<?php } ?>
                                         </td>
-                                        <td class="text-center"></td>
+                                        <td class="text-center"><?php echo number_format($tag["count"]); ?></td>
                                         <td class="text-center">
                                             <a href="<?php echo site_url("cms/blog_tags/edit/".$tag["id"]); ?>" class="btn btn-xs btn-warning">
                                                 <i class="fa fa-edit"></i>Edit
