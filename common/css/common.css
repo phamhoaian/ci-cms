@@ -606,9 +606,11 @@ a:hover {
 .entry .content-thumbnail {
 	margin-bottom: 30px;
 }
-.entry .content-main,
+.entry .content-main {
+    margin-bottom: 25px;
+}
 .entry .content-author {
-	margin-bottom: 50px;
+    margin: 25px 0;
 }
 .entry .content-author > .gr-table > .gr-table-cell {
 	width: 50%;
@@ -655,6 +657,11 @@ a:hover {
 }
 .entry .content-author .author-social > li > a:hover {
 	color: #EB2C33;
+}
+.entry .content-keyword .tag-label {
+    font-weight: bold;
+    margin-right: 15px;
+    color: #999999;
 }
 /* Widget */
 .widget-block {
@@ -750,20 +757,6 @@ a:hover {
     margin-top: 1px;
     margin-bottom: 7px;
 }
-.tags li:after {
-    content: '';
-    z-index: 2;
-    position: absolute;
-    top: 10px;
-    right: -2px;
-    width: 5px;
-    height: 6px;
-    opacity: .95;
-    background: #eb6b22;
-    border-radius: 3px 0 0 3px;
-    -webkit-box-shadow: inset 1px 0 #99400e;
-    box-shadow: inset 1px 0 #99400e;
-}
 .tags a, .tags span {
     display: block;
     -webkit-box-sizing: border-box;
@@ -791,7 +784,7 @@ a:hover {
 }
 .tags a:hover span {
     padding: 0 7px 0 6px;
-    max-width: 40px;
+    width: auto;
     -webkit-box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.15), 1px 1px 2px rgba(0, 0, 0, 0.2);
     box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.15), 1px 1px 2px rgba(0, 0, 0, 0.2);
 }
@@ -801,7 +794,7 @@ a:hover {
     left: 100%;
     z-index: 2;
     overflow: hidden;
-    max-width: 0;
+    width: 0;
     height: 24px;
     line-height: 21px;
     padding: 0 0 0 2px;
@@ -810,8 +803,8 @@ a:hover {
     background: #eb6b22;
     border: 1px solid;
     border-color: #d15813 #c85412 #bf5011;
-    border-radius: 0 2px 2px 0;
     opacity: .95;
+    white-space: nowrap;
     background-image: -webkit-linear-gradient(top, #ed7b39, #df5e14);
     background-image: -moz-linear-gradient(top, #ed7b39, #df5e14);
     background-image: -o-linear-gradient(top, #ed7b39, #df5e14);
@@ -851,6 +844,7 @@ a:hover {
     background-image: -o-linear-gradient(top, #EB2C33, #EB2C33);
     background-image: linear-gradient(to bottom, #EB2C33, #EB2C33);
 }
+
 /* Pagination */
 .paging {
 	text-align: center;

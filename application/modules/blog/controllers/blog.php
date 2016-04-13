@@ -128,8 +128,38 @@ class Blog extends MY_Controller {
         $this->load_view("list", $this->data);
     }
     
-    public function tag($tag_id = '', $offset = 0) {
+    public function tag($name = '', $offset = 0) {
+        // breadcrumbs
+        $this->position['item'][1]['title'] = "Blog";
+        $this->position['item'][1]['url']= site_url("blog");
+        $this->position['item'][2]['title'] = "Display result by tag: ".$name;
+        $this->data['position'] = $this->load->view("pc/parts/position", $this->position, TRUE);
         
+        // list items
+        $this->common_model->set_table("blog_tags");
+        $this->db->join("blog_tags_xref", "blog_tags.id = blog_tags_xref.tagID", "inner");
+        $this->db->join("blog_items", "blog_tags_xref.itemID = blog_items.id", "inner");
+        $where = array(
+            "blog_tags.name LIKE '%{$name}%'" => NULL,
+            "blog_items.delete_flag" => 0,
+            "blog_items.published" => 1,
+        );
+        $this->data["items"] = $this->common_model->get_all($where, "published_date DESC", 1, $offset);
+        $this->common_model->set_table("blog_tags");
+        $this->db->join("blog_tags_xref", "blog_tags.id = blog_tags_xref.tagID", "inner");
+        $this->db->join("blog_items", "blog_tags_xref.itemID = blog_items.id", "inner");
+        $where = array(
+            "blog_tags.name LIKE '%{$name}%'" => NULL,
+            "blog_items.delete_flag" => 0,
+            "blog_items.published" => 1,
+        );
+        $this->data["count_items"] = $this->common_model->get_count($where);
+        
+        $path = "blog/tag/".$name;
+        $this->data["pagination"] = $this->generate_pagination($path, $this->data["count_items"], 1, 4);
+        
+        // load view
+        $this->load_view("list", $this->data);
     }
     
     public function item($alias = '', $id = '') {
@@ -147,6 +177,14 @@ class Blog extends MY_Controller {
         if (!$this->data["category"]) {
             redirect(site_url("blog"));
         }
+        
+        // increase hits
+        $current_hits = $this->data["item"]["hits"];
+        $upd_data = array(
+            "hits" => ++$current_hits
+        );
+        $this->common_model->set_table("blog_items");
+        $this->common_model->update($upd_data, array("id" => $id));
         
         // breadcrumbs
         $this->position['item'][1]['title'] = "Blog";

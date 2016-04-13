@@ -46,6 +46,25 @@
                         	<?php echo $item["fulltext"]; ?>
                         </div>
                         <!-- /content-main -->
+                        <?php if ($list_tags && count($list_tags) > 0) : ?>
+                        <div class="content-keyword">
+                            <span class="tag-label floatL">
+                                <i class="fa fa-tags"></i>
+                                Tags: 
+                            </span>
+                            <ul class="tags red">
+                                <?php foreach ($list_tags as $tag) : ?>
+                                <li>
+                                    <a href="<?php echo site_url("blog/tag/".$tag["name"]); ?>">
+                                        <?php echo $tag["name"]; ?>
+                                        <span><?php echo $tag["count"] ?></span>
+                                    </a>
+                                </li>
+                                <?php endforeach; ?>
+                            </ul>
+                        </div>
+                        <?php endif; ?>
+                        <!-- /content-keyword -->
                         <div class="content-author">
                         	<div class="gr-table align-middle">
                         		<div class="gr-table-cell">
