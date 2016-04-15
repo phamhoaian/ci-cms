@@ -49,17 +49,6 @@ class Blog extends MY_Controller {
 	        "blog_items.published" => 1
 		);
 		$this->data["most_view"] = $this->common_model->get_all($where, "hits DESC", $this->limit_most_view);
-        
-        // list tags
-        $this->common_model->set_table("blog_tags");
-       $this->data["list_tags"] = $this->common_model->get_all(array("published" => 1), "id DESC", $this->limit_tags);
-       foreach ($this->data["list_tags"] as &$tag) {
-           $this->common_model->set_table("blog_tags_xref");
-           $tag["count"] = $this->common_model->get_count(array("tagID" => $tag["id"]));
-           if (!$tag["count"]) {
-               unset($tag);
-           }
-       }
     }
     
     public function index($offset = 0) {
@@ -144,7 +133,7 @@ class Blog extends MY_Controller {
             "blog_items.delete_flag" => 0,
             "blog_items.published" => 1,
         );
-        $this->data["items"] = $this->common_model->get_all($where, "published_date DESC", 1, $offset);
+        $this->data["items"] = $this->common_model->get_all($where, "published_date DESC", $this->limit, $offset);
         $this->common_model->set_table("blog_tags");
         $this->db->join("blog_tags_xref", "blog_tags.id = blog_tags_xref.tagID", "inner");
         $this->db->join("blog_items", "blog_tags_xref.itemID = blog_items.id", "inner");
@@ -156,7 +145,7 @@ class Blog extends MY_Controller {
         $this->data["count_items"] = $this->common_model->get_count($where);
         
         $path = "blog/tag/".$name;
-        $this->data["pagination"] = $this->generate_pagination($path, $this->data["count_items"], 1, 4);
+        $this->data["pagination"] = $this->generate_pagination($path, $this->data["count_items"], $this->limit, 4);
         
         // load view
         $this->load_view("list", $this->data);
@@ -176,6 +165,17 @@ class Blog extends MY_Controller {
         $this->data["category"] = $this->common_model->get_row(array("id" => $this->data["item"]["cat_id"]));
         if (!$this->data["category"]) {
             redirect(site_url("blog"));
+        }
+        
+        // list tags
+        $this->common_model->set_table("blog_tags");
+        $this->db->select("blog_tags.*");
+        $this->db->join("blog_tags_xref", "blog_tags.id = blog_tags_xref.tagID", "inner");
+        $this->db->group_by("blog_tags.name");
+        $this->data["list_tags"] = $this->common_model->get_all(array("itemID" => $id, "published" => 1), "blog_tags.id DESC", $this->limit_tags);
+        foreach ($this->data["list_tags"] as &$tag) {
+            $this->common_model->set_table("blog_tags_xref");
+            $tag["count"] = $this->common_model->get_count(array("tagID" => $tag["id"]));
         }
         
         // increase hits
