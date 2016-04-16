@@ -186,6 +186,20 @@ class Blog extends MY_Controller {
         $this->common_model->set_table("blog_items");
         $this->common_model->update($upd_data, array("id" => $id));
         
+        // related posts
+        $this->common_model->set_table("blog_items");
+        $this->db->select("blog_items.*, blog_categories.alias as cat_alias, blog_categories.name as cat_name");
+        $this->db->join("blog_tags_xref", "blog_items.id = blog_tags_xref.itemID", "inner");
+        $this->db->join("blog_categories", "blog_items.cat_id = blog_categories.id", "inner");
+        $this->db->group_by("blog_tags_xref.itemID");
+        $where = array(
+            "blog_items.published" => 1,
+            "blog_items.delete_flag" => 0,
+            "blog_items.id !=" => $id,
+            "blog_categories.published" => 1
+        );
+        $this->data["related_posts"] = $this->common_model->get_all($where, "published_date DESC, blog_tags_xref.id DESC", $this->limit);
+        
         // breadcrumbs
         $this->position['item'][1]['title'] = "Blog";
         $this->position['item'][1]['url']= site_url("blog");

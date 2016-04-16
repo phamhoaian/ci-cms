@@ -92,8 +92,34 @@
                         	</div>
                         </div>
                         <!-- /content-author -->
+                        <?php if ($related_posts) : ?>
+                        <div class="related_posts">
+                            <h4 class="block-title">Related posts</h4>
+                            <div class="row">
+                                <?php foreach ($related_posts as $post) : ?>
+                                <article class="col-md-4">
+                                    <div class="inner">
+                                        <div class="post-thumbnail">
+                                            <a href="<?php echo site_url("blog/".$post["alias"]."-".$post["id"]); ?>">
+                                                <img src="<?php echo base_url()."images/blog/items/".$post["id"]."_900.".$post["image"]; ?>">
+                                            </a>
+                                        </div>
+                                        <div class="post-content">
+                                            <a class="post-category" href="<?php echo site_url("blog/".$post["cat_alias"]); ?>"><?php echo $post["cat_name"]; ?></a>
+                                            <h5 class="post-title">
+                                                <a href="<?php echo site_url("blog/".$post["alias"]."-".$post["id"]); ?>"><?php echo $post["title"]; ?></a>
+                                            </h5>
+                                        </div>
+                                    </div>
+                                </article>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
+                        <!-- /related_posts -->
+                        <?php endif; ?>
 					</div>
 				</article>
+                <!-- /article -->
 			</div>
 			<aside class="col-md-3">
                 <?php $this->load->view('pc/sidebar'); ?>
